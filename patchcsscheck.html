@@ -1,0 +1,604 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Patch's CSS Check</title>
+<style>
+:root{
+  --bg:#0C1220; --bg2:#05080F; --card:#182240; --card2:#1F2C4E; --line:#2E3E63;
+  --txt:#EAF0FA; --dim:#A3B6D3; --mute:#8A9CBC;
+  --purple:#A855F7; --purpleL:#C79BFB; --purpleD:#4B1B8A;
+  --gold:#E0B23C;
+  --ok:#45E39B; --bad:#FF6B87; --warn:#F5BE3E; --blue:#5AAEFF; --teal:#5AD8D8;
+  --r:14px;
+  --fh:Arial,Helvetica,sans-serif; --fb:Calibri,Candara,"Segoe UI",sans-serif; --fm:Consolas,Menlo,monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--txt);font-family:var(--fb);font-size:18px;line-height:1.5;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1120px;margin:0 auto;padding:20px 20px 80px}
+h1,h2,h3{font-family:var(--fh);font-weight:700;letter-spacing:-.2px}
+button{font-family:inherit;font-size:inherit;color:inherit;cursor:pointer;border:none;background:none}
+button:focus-visible,input:focus-visible,textarea:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
+.hide{display:none!important}
+.sr{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+code{font-family:var(--fm);color:var(--teal);font-size:.95em}
+
+header{position:sticky;top:0;z-index:10;background:linear-gradient(180deg,var(--bg) 72%,transparent);padding:14px 0 10px}
+.bar{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.brand{font-family:var(--fh);font-weight:800;font-size:19px}
+.brand span{color:var(--gold)}
+.prog{flex:1;min-width:180px;height:12px;background:var(--card);border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.prog i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--purple),var(--gold));transition:width .35s}
+.pct{font-family:var(--fh);font-size:15px;color:var(--mute);min-width:96px;text-align:right}
+
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:22px}
+.panel{margin-top:22px}
+.kicker{font-family:var(--fh);font-size:13px;font-weight:700;letter-spacing:2px;color:var(--gold);text-transform:uppercase}
+h1.q,h2.q{font-size:30px;margin:8px 0 6px}
+.sub{color:var(--purpleL);font-style:italic;font-size:18px;margin-bottom:20px}
+
+.btn{display:inline-flex;align-items:center;gap:10px;background:var(--card2);border:2px solid var(--line);border-radius:11px;padding:13px 22px;font-family:var(--fh);font-weight:700;font-size:17px;transition:.15s}
+.btn:hover{border-color:var(--purpleL);background:#26355C}
+.btn.primary{background:var(--purpleD);border-color:var(--purple);color:#fff}
+.btn.primary:hover{background:#5F27AE}
+.btn.gold{border-color:var(--gold);color:var(--gold)}
+.row{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-top:22px}
+
+.opts{display:grid;gap:12px;margin-top:6px}
+.opt{text-align:left;width:100%;background:var(--card2);border:2px solid var(--line);border-radius:12px;padding:15px 18px;transition:.15s;font-size:17px;line-height:1.4}
+.opt:hover:not(:disabled){border-color:var(--purpleL)}
+.opt.right{border-color:var(--ok);background:rgba(69,227,155,.13)}
+.opt.wrong{border-color:var(--bad);background:rgba(255,107,135,.13)}
+.opt.right::after{content:"  \2713  correct";color:var(--ok);font-weight:700;font-family:var(--fh);font-size:15px}
+.opt.wrong::after{content:"  \2717  not this one";color:var(--bad);font-weight:700;font-family:var(--fh);font-size:15px}
+.opt b{font-family:var(--fh);display:block;margin-bottom:3px}
+
+.items{display:flex;flex-wrap:wrap;gap:10px;margin:6px 0 18px}
+.chip{background:var(--card2);border:2px solid var(--line);border-radius:999px;padding:9px 18px;font-size:17px;text-align:left}
+.chip.active{border-color:var(--gold);background:#2B2410;color:var(--gold);font-weight:700}
+.chip.done{opacity:.45}
+.chip.right{border-color:var(--ok)}
+.chip.wrong{border-color:var(--bad)}
+
+.bins{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.bin{border:2px dashed var(--line);border-radius:12px;padding:16px;min-height:150px;text-align:left;width:100%}
+.bin:hover{background:rgba(255,255,255,.03)}
+.bin h3{font-size:20px;margin-bottom:4px}
+.bin p{color:var(--mute);font-size:15px;margin-bottom:10px}
+.bin.inl{border-color:var(--teal)} .bin.inl h3{color:var(--teal)}
+.bin.int{border-color:var(--gold)} .bin.int h3{color:var(--gold)}
+.bin.ext{border-color:var(--purpleL)} .bin.ext h3{color:var(--purpleL)}
+.binlist{display:flex;flex-wrap:wrap;gap:8px}
+.binlist span{background:var(--card2);border:1px solid var(--line);border-radius:10px;padding:5px 11px;font-size:14px}
+.binlist span.ok{border-color:var(--ok);color:var(--ok)}
+.binlist span.no{border-color:var(--bad);color:var(--bad)}
+
+.fb{border-radius:12px;padding:15px 18px;margin-top:16px;font-size:17px;border:2px solid}
+.fb.good{border-color:var(--ok);background:rgba(69,227,155,.1)}
+.fb.bad{border-color:var(--warn);background:rgba(245,190,62,.1)}
+.fb b{font-family:var(--fh);display:block;margin-bottom:4px}
+.fb.good b{color:var(--ok)} .fb.bad b{color:var(--warn)}
+
+/* round 2: the rule diagram */
+.diagwrap{display:grid;grid-template-columns:minmax(300px,520px) 1fr;gap:22px;align-items:start}
+.rule{background:var(--bg2);border:2px solid var(--line);border-radius:14px;padding:18px 16px;font-family:var(--fm);font-size:22px;line-height:2.2;white-space:nowrap;overflow-x:auto}
+.rule .ind{padding-left:34px}
+.rule .sel{color:var(--purpleL)} .rule .prop{color:var(--teal)} .rule .val{color:var(--gold)} .rule .pun{color:var(--txt)}
+.badge{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:50%;background:var(--bg2);border:3px solid var(--gold);color:var(--gold);font-family:var(--fh);font-weight:700;font-size:17px;vertical-align:middle;margin:0 6px;line-height:1}
+.badge.on{background:var(--gold);color:#0C1220}
+.badge.done{border-color:var(--ok);color:var(--ok)}
+.hl{outline:2px solid var(--line);border-radius:6px;padding:0 3px}
+
+.snip{font-family:var(--fm);background:var(--bg2);border:1px solid var(--line);border-radius:10px;padding:12px 16px;margin:0 0 16px;font-size:16px;line-height:1.6;white-space:pre-wrap;color:var(--txt)}
+
+.scores{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px;margin:20px 0}
+.sc{background:var(--card2);border:2px solid var(--line);border-radius:12px;padding:16px}
+.sc .n{font-family:var(--fh);font-size:38px;font-weight:700}
+.sc .l{color:var(--dim);font-size:15px;margin-top:4px}
+.big{font-family:var(--fh);font-size:64px;font-weight:700;color:var(--gold);line-height:1}
+.miss{border-left:4px solid var(--warn);padding:12px 0 12px 16px;margin:14px 0}
+.miss b{font-family:var(--fh);display:block;color:var(--warn);margin-bottom:3px}
+textarea{width:100%;min-height:230px;background:var(--bg2);color:var(--txt);border:2px solid var(--line);border-radius:12px;padding:15px;font-family:var(--fm);font-size:15px;line-height:1.55;resize:vertical}
+input[type=text]{background:var(--bg2);color:var(--txt);border:2px solid var(--line);border-radius:11px;padding:13px 16px;font-family:inherit;font-size:18px;width:100%;max-width:420px}
+label{display:block;font-family:var(--fh);font-weight:700;margin-bottom:8px;font-size:17px}
+ul.plain{list-style:none;display:grid;gap:10px;margin-top:12px}
+ul.plain li{padding-left:30px;position:relative;color:var(--dim)}
+ul.plain li::before{content:"";position:absolute;left:6px;top:.55em;width:9px;height:9px;border-radius:50%;background:var(--gold)}
+.note{color:var(--mute);font-size:15px;margin-top:10px}
+@media (max-width:860px){
+  body{font-size:17px}
+  .bins,.diagwrap{grid-template-columns:1fr}
+  h1.q,h2.q{font-size:25px} .big{font-size:52px}
+  .rule{font-size:19px}
+}
+@media print{
+  body{background:#fff;color:#000} .noprint{display:none!important}
+  .card,.sc{border:1px solid #999;background:#fff}
+  .big{color:#000} textarea{background:#fff;color:#000}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="noprint">
+  <div class="bar">
+    <div class="brand">PATCH<span>'S</span> CSS CHECK</div>
+    <div class="prog" role="progressbar" aria-label="Progress" aria-valuemin="0" aria-valuemax="6" aria-valuenow="0" id="pwrap"><i id="pbar"></i></div>
+    <div class="pct" id="pct">Not started</div>
+  </div>
+</header>
+
+<main>
+<!-- ============ START ============ -->
+<section id="start" class="card panel">
+  <div class="kicker">ITD 110 &middot; Interactive assignment</div>
+  <h1 class="q">Patch's CSS Check</h1>
+  <p class="sub">Six short rounds. About 20 minutes. You get an explanation for every answer.</p>
+  <p style="color:var(--dim)">This checks the four things you're meant to walk out of the CSS lesson knowing:</p>
+  <ul class="plain">
+    <li>Tell inline, internal and external CSS apart, and know when to use each</li>
+    <li>Name every part of a CSS rule and define the key terms</li>
+    <li>Choose the right selector &mdash; element, class, ID, combinator or pseudo-class</li>
+    <li>Predict which rule wins (the cascade and specificity) and use the box model</li>
+  </ul>
+  <div style="margin-top:26px">
+    <label for="nm">Your name (this goes on the summary you turn in)</label>
+    <input type="text" id="nm" placeholder="e.g. Jordan Rivera" autocomplete="name">
+  </div>
+  <div class="row"><button class="btn primary" id="go">Start round 1 &rarr;</button></div>
+  <p class="note">Nothing is saved to a server. When you finish you'll get a summary to paste into Canvas &mdash; so don't close the tab until you've copied it.</p>
+</section>
+
+<!-- ============ ROUNDS ============ -->
+<section id="round" class="card panel hide" aria-labelledby="rq">
+  <div class="kicker" id="rk"></div>
+  <h2 class="q" id="rq" tabindex="-1"></h2>
+  <p class="sub" id="rs"></p>
+  <div id="rbody"></div>
+  <div id="fb" aria-live="polite"></div>
+  <div class="row"><button class="btn primary hide" id="next">Next &rarr;</button></div>
+</section>
+
+<!-- ============ RESULTS ============ -->
+<section id="done" class="card panel hide" aria-labelledby="dTitle">
+  <div class="kicker">Finished</div>
+  <h2 class="q" id="dTitle" tabindex="-1">Nice work.</h2>
+  <p class="sub" id="dSub"></p>
+  <div style="display:flex;align-items:center;gap:26px;flex-wrap:wrap">
+    <div><div class="big" id="dScore">0%</div><div style="color:var(--mute);font-size:15px">overall</div></div>
+    <div id="dMsg" style="flex:1;min-width:260px;color:var(--dim)"></div>
+  </div>
+  <div class="scores" id="dScores"></div>
+  <h3 style="font-size:22px;margin-top:26px">Worth another look</h3>
+  <div id="dMiss"></div>
+  <h3 style="font-size:22px;margin-top:30px">Turn this in</h3>
+  <p style="color:var(--dim);margin-bottom:12px">Copy everything in the box and paste it into the Canvas assignment, or use Print to save it as a PDF.</p>
+  <label for="dOut" class="sr">Completion summary</label>
+  <textarea id="dOut" readonly></textarea>
+  <div class="row noprint">
+    <button class="btn primary" id="copy">Copy summary</button>
+    <button class="btn gold" onclick="window.print()">Print / save as PDF</button>
+    <button class="btn" id="again">Start over</button>
+  </div>
+</section>
+</main>
+
+</div>
+<script>
+"use strict";
+/* ------------------------------------------------------------------ data */
+const OBJ = {
+  A:"Add CSS three ways",
+  B:"Read a rule and know the terms",
+  C:"Choose the right selector",
+  D:"Predict the cascade and use the box model"
+};
+
+/* Round 1: [label, bin, why, isCode] */
+const R1 = {
+  obj:"A", kicker:"Round 1 of 6", q:"Inline, internal or external?",
+  sub:"Click an item, then click the bin it belongs in.",
+  items:[
+    ['<p style="color: maroon;">',"inl","Inline. The style attribute sits inside the opening tag and affects that one element only.",1],
+    ['<link rel="stylesheet" href="css/style.css">',"ext","External. The link element connects the page to a separate .css file. It goes in the head.",1],
+    ['<style> h1 { color: teal; } </style>',"int","Internal. A style element in the head of one page. Its rules apply to that page and no other.",1],
+    ["A file called style.css that holds body { margin: 0; }","ext","External. A separate file with the .css extension. It holds only CSS — no HTML tags at all.",0],
+    ['<h2 style="text-align: center;">',"inl","Inline. Any style attribute on an element is inline CSS, no matter which element it is on.",1],
+    ["Rules written in the head of one page that style only that page","int","Internal. It lives inside the page itself, so it travels with the page — and it only affects that page.",0],
+    ["One file linked by 40 pages: change it once and all 40 update","ext","External. This is the whole reason external CSS exists, and why it is your default choice.",0],
+    ["Overrides the other two kinds for one single element","inl","Inline. It sits closest to the element, so it wins over internal and external rules for the same property.",0],
+    ["A one-page demo you can email as a single file with its styles inside","int","Internal. Everything is in one .html file, so nothing gets lost when you move or email it.",0],
+    ["The kind the textbook says to use for as much formatting as possible","ext","External. One place to change, reused by every page, and a clean split between HTML and CSS.",0]
+  ]
+};
+
+/* Round 2: parts of a rule */
+const R2 = {
+  obj:"B", kicker:"Round 2 of 6", q:"Name the part of the rule",
+  sub:"Click a numbered badge on the rule, then choose what that part is.",
+  parts:[
+    {n:1,name:"The selector",why:"The selector answers WHO gets styled. p.note means: paragraphs that have the class note."},
+    {n:2,name:"The declaration block",why:"Everything between the curly braces { } is the declaration block. Forget a closing brace and every rule after it breaks."},
+    {n:3,name:"A property",why:"The property answers WHAT you are changing — color, font-size, margin. It always comes before the colon."},
+    {n:4,name:"A value",why:"The value answers HOW — the setting for the property. It comes after the colon: #1f2430, 18px, center."},
+    {n:5,name:"The semicolon",why:"The semicolon ends one declaration. Leave it out and the browser reads the next line as part of this one, and both stop working."},
+    {n:6,name:"A whole declaration",why:"A declaration is one property: value; pair. A rule can hold as many declarations as you need."}
+  ],
+  pool:["The selector","The declaration block","A property","A value","The semicolon","A whole declaration"]
+};
+
+/* Round 3: terms */
+const R3 = {
+  obj:"B", kicker:"Round 3 of 6", q:"Match the term to the definition",
+  sub:"Click a term, then click its definition.",
+  pairs:[
+    ["CSS","Cascading Style Sheets: the language that controls how HTML is displayed","HTML is the structure — what the content is. CSS is the presentation — how it looks."],
+    ["Selector","The part of a rule that picks which elements get the styles","p, .card and #site-title are all selectors. Get the selector right and the rest is easy."],
+    ["Class","A reusable label you can put on as many elements as you like, targeted with a dot","class=\"card\" in HTML, .card in CSS. Use it for anything that appears more than once."],
+    ["ID","A label that must be unique on the page, targeted with a # sign","id=\"site-title\" in HTML, #site-title in CSS. One per page — screen readers and links depend on it."],
+    ["The cascade","The rules the browser uses to decide which style wins when two rules disagree","Importance, then specificity, then order. Inline beats stylesheets; a later rule beats an earlier equal one."],
+    ["Specificity","A score for how precisely a selector targets an element; the higher score wins","ID beats class, class beats element. That is why #intro wins over .lead even if .lead comes later."],
+    ["Box model","Content, then padding, then border, then margin, wrapped around every element","Every element on a page is a box. Padding is inside the border; margin is outside it."],
+    ["Pseudo-class","A selector for an element in a certain state or position, written with one colon","a:hover, li:first-child, input:focus. You cannot invent your own — they are built into CSS."]
+  ]
+};
+
+/* Round 4: pick the selector */
+const R4 = {
+  obj:"C", kicker:"Round 4 of 6", q:"Which selector would you write?",
+  sub:"Five real styling jobs. Pick the selector that targets exactly what is asked — no more, no less.",
+  cases:[
+    {q:"Make every paragraph on the page 18px.",
+     opts:[["p",1],[".p",0],["#p",0],["paragraph",0]],
+     why:"An element selector is just the tag name with nothing in front. .p would look for class=\"p\", #p for id=\"p\", and paragraph is not an HTML element."},
+    {q:"Give the three menu cards (and any cards you add later) a border and rounded corners. Each card is a div with class=\"card\".",
+     opts:[["div",0],[".card",1],["#card",0],["card",0]],
+     why:"A class selector starts with a dot and targets every element carrying that class — including cards you add next month. div would style every div on the page, not just cards."},
+    {q:"Style the one site title at the top of the page: <h1 id=\"site-title\">.",
+     opts:[["h1",0],[".site-title",0],["#site-title",1],["site-title",0]],
+     why:"An ID selector starts with #. It is the right choice for something that exists exactly once. h1 would also hit any other h1 you add later."},
+    {q:"Change a link's color only while the mouse is over it.",
+     opts:[["a:hover",1],["a::hover",0],["a.hover",0],["hover a",0]],
+     why:"Hover is a state, so it is a pseudo-class with ONE colon. Two colons are for pseudo-elements like ::first-letter. a.hover would look for class=\"hover\"."},
+    {q:"Italicize only the FIRST paragraph that comes right after each h2, and leave the rest alone.",
+     opts:[["h2 p",0],["h2 ~ p",0],["h2 + p",1],["h2, p",0]],
+     why:"The + is the adjacent sibling combinator: the p immediately after an h2. ~ would catch every p after the h2, and h2, p is a group that styles all h2s AND all ps."}
+  ]
+};
+
+/* Round 5: who wins? */
+const R5 = {
+  obj:"D", kicker:"Round 5 of 6", q:"Who wins?",
+  sub:"Read the code, then predict what the browser actually shows.",
+  cases:[
+    {q:"The h1 is styled in all three places. What color is it?",
+     code:'/* css/style.css (external) */\nh1 { color: navy; }\n\n<!-- in the <head>, after the <link> -->\n<style> h1 { color: teal; } </style>\n\n<!-- in the <body> -->\n<h1 style="color: maroon;">Patch\'s Café</h1>',
+     opts:[["navy",0],["teal",0],["maroon",1],["The browser's default black",0]],
+     why:"Inline styles sit closest to the element and beat any normal rule in a stylesheet. Remove the inline style and it turns teal; remove that too and it turns navy."},
+    {q:"Same stylesheet, two rules for the same thing. What color are the paragraphs?",
+     code:'p { color: blue; }\n/* ...forty lines later... */\np { color: green; }',
+     opts:[["blue",0],["green",1],["A mix of both",0],["Neither — it's an error",0]],
+     why:"Same selector, same specificity, so the tie goes to the rule that comes last. This is why a style you \"definitely wrote\" sometimes does nothing: something later overrode it."},
+    {q:"The class rule comes FIRST, the element rule comes LAST. What color is this paragraph?",
+     code:'.intro { color: purple; }\np { color: black; }\n\n<p class="intro">Welcome in.</p>',
+     opts:[["purple",1],["black",0],["The default",0],["It alternates",0]],
+     why:"Order only breaks a tie. A class selector is more specific than an element selector, so .intro wins even though p comes later."},
+    {q:"One element, two selectors. What color is the text?",
+     code:'#hero   { color: white; }\n.banner { color: yellow; }\n\n<div id="hero" class="banner">Open daily</div>',
+     opts:[["white",1],["yellow",0],["Both, blended",0],["Whichever the browser loads first",0]],
+     why:"An ID outranks a class, no matter which comes later. This is also why beginners who style with IDs everywhere end up fighting their own CSS."},
+    {q:"What color are the definition terms?",
+     code:'dt { color: red !important; }\ndt { color: blue; }',
+     opts:[["blue, because it comes last",0],["red",1],["purple",0],["black",0]],
+     why:"!important jumps a declaration above every normal one, even later ones and inline styles. It works — but it is a sledgehammer. Fix the selector instead whenever you can."},
+    {q:"Tricky one. This page put the <link> AFTER the <style> block. What color is the h1?",
+     code:'<head>\n  <style> h1 { color: teal; } </style>\n  <link rel="stylesheet" href="css/style.css">\n</head>\n\n/* css/style.css */\nh1 { color: navy; }',
+     opts:[["teal — internal always beats external",0],["navy",1],["maroon",0],["black",0]],
+     why:"Internal and external CSS are equals. The one that comes later in the page wins the tie. Internal usually wins only because people put the <style> block after the <link>. Order, not type, decides."}
+  ]
+};
+
+/* Round 6: box model + recipes */
+const R6 = {
+  obj:"D", kicker:"Round 6 of 6", q:"The box model and CSS recipes",
+  sub:"Six real jobs from the lesson project. Pick what actually works.",
+  cases:[
+    {q:"The text inside your menu card is touching its border. What do you add?",
+     opts:[["margin",0],["padding",1],["border-spacing",0],["line-height",0]],
+     why:"Padding is the space INSIDE the border, between the border and the content. Margin is the space OUTSIDE the border, between this box and its neighbors."},
+    {q:"You write  padding: 10px 20px 30px 40px;  How much padding is on the LEFT?",
+     opts:[["10px",0],["20px",0],["30px",0],["40px",1]],
+     why:"Four values go clockwise from the top: top, right, bottom, left. Remember it as TRouBLe. So the left side gets the last value, 40px."},
+    {q:"How do you center a 760px-wide menu box on a wide screen?",
+     opts:[["text-align: center;",0],["max-width: 760px; margin: 0 auto;",1],["float: center;",0],["position: center;",0]],
+     why:"Give the box a width, then set its left and right margins to auto and the browser splits the leftover space evenly. text-align centers the text INSIDE a box, not the box itself, and float: center does not exist."},
+    {q:"Your page shows up completely unstyled. The stylesheet is at css/style.css and your link says href=\"style.css\". What do you check first?",
+     opts:[["Rewrite all the CSS",0],["The path in href — it should be css/style.css",1],["Switch browsers",0],["Add !important to every rule",0]],
+     why:"If NOTHING is styled, the browser never found the file. The href is a path, read from where index.html sits. Fix the path first; it is the cheapest check and the most common cause."},
+    {q:"A box has width: 300px; padding: 20px; border: 5px solid; and the default box-sizing. How wide is it on screen?",
+     opts:[["300px",0],["320px",0],["345px",0],["350px",1]],
+     why:"With the default content-box, width is just the content. Add 20px of padding on each side (40) and 5px of border on each side (10): 300 + 40 + 10 = 350. Set box-sizing: border-box and it would be exactly 300."},
+    {q:"The recipe for giving your menu cards rounded corners is…",
+     opts:[["border-radius: 12px;",1],["border-round: 12px;",0],["corner: round;",0],["border-style: rounded;",0]],
+     why:"border-radius rounds the corners; a bigger number means a rounder corner, and 50% on a square makes a circle. The other three are not real CSS properties, so the browser silently ignores them."}
+  ]
+};
+
+/* ------------------------------------------------------------------ state */
+const ROUNDS = [R1,R2,R3,R4,R5,R6];
+let ri = 0, student = "", misses = [];
+let tally = {A:{c:0,t:0},B:{c:0,t:0},C:{c:0,t:0},D:{c:0,t:0}};
+
+const $ = s => document.querySelector(s);
+const el = (t,c,h) => { const e=document.createElement(t); if(c)e.className=c; if(h!==undefined)e.innerHTML=h; return e; };
+const esc = s => String(s).replace(/[&<>"]/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[m]));
+
+function score(obj, right, label, why){
+  tally[obj].t++; if(right) tally[obj].c++;
+  if(!right) misses.push({label, why});
+}
+function progress(){
+  const total = ROUNDS.length, done = ri;
+  $("#pbar").style.width = (done/total*100)+"%";
+  $("#pwrap").setAttribute("aria-valuenow", done);
+  $("#pct").textContent = done===0 ? "Round 1 of "+total : (done>=total?"Complete":"Round "+(done+1)+" of "+total);
+}
+function feedback(good, title, body){
+  const f = $("#fb"); f.innerHTML="";
+  f.appendChild(el("div","fb "+(good?"good":"bad"),"<b>"+esc(title)+"</b>"+esc(body)));
+}
+function clearFb(){ $("#fb").innerHTML=""; }
+function showNext(last){
+  const b = $("#next"); b.classList.remove("hide");
+  b.textContent = last ? "See my results →" : "Next round →";
+  b.focus();
+}
+
+/* ------------------------------------------------------------------ round 1: sort into three bins */
+function drawR1(){
+  const b = $("#rbody"); b.innerHTML="";
+  let sel = null, done = 0;
+  const items = el("div","items");
+  R1.items.forEach((it,i)=>{
+    const c = el("button","chip", it[3] ? "<code>"+esc(it[0])+"</code>" : esc(it[0]));
+    c.setAttribute("aria-pressed","false");
+    c.onclick = ()=>{ if(c.classList.contains("done"))return;
+      items.querySelectorAll(".chip").forEach(x=>{x.classList.remove("active");x.setAttribute("aria-pressed","false");});
+      c.classList.add("active"); c.setAttribute("aria-pressed","true"); sel = {i,c}; clearFb(); };
+    items.appendChild(c);
+  });
+  b.appendChild(items);
+  const bins = el("div","bins");
+  [["inl","INLINE","a style attribute on one element"],
+   ["int","INTERNAL","a <style> block in the head of one page"],
+   ["ext","EXTERNAL","a separate .css file, linked to many pages"]].forEach(k=>{
+    const d = el("button","bin "+k[0], "<h3>"+k[1]+"</h3><p>"+esc(k[2])+"</p>");
+    d.setAttribute("aria-label","Put the selected item in the "+k[1].toLowerCase()+" bin");
+    const list = el("div","binlist"); d.appendChild(list);
+    d.onclick = ()=>{
+      if(!sel){ feedback(false,"Pick an item first","Click one of the items above, then click a bin."); return; }
+      const it = R1.items[sel.i], right = it[1]===k[0];
+      const names = {inl:"inline",int:"internal",ext:"external"};
+      score("A", right, "Inline, internal or external: "+it[0], it[2]);
+      list.appendChild(el("span", right?"ok":"no", (right?"✓ ":"✗ ")+esc(it[0].length>34?it[0].slice(0,32)+"…":it[0])));
+      sel.c.classList.add("done", right?"right":"wrong"); sel.c.classList.remove("active"); sel.c.disabled = true;
+      feedback(right, right?"Correct":"Not quite — it's "+names[it[1]], it[2]);
+      sel=null; done++;
+      if(done===R1.items.length) showNext(false);
+    };
+    bins.appendChild(d);
+  });
+  b.appendChild(bins);
+}
+
+/* ------------------------------------------------------------------ round 2: rule diagram */
+function ruleHTML(){
+  const bd = n => '<button class="badge" data-n="'+n+'" aria-label="Part '+n+'">'+n+'</button>';
+  return '<div class="rule" role="group" aria-label="A CSS rule: p.note, open brace, color colon #1f2430 semicolon, font-size colon 18px semicolon, close brace. Six numbered parts can be selected.">'
+   + '<div>'+bd(1)+'<span class="sel">p.note</span> <span class="pun">{</span>'+bd(2)+'</div>'
+   + '<div class="ind">'+bd(3)+'<span class="prop">color</span><span class="pun">: </span>'+bd(4)+'<span class="val">#1f2430</span><span class="pun">;</span>'+bd(5)+'</div>'
+   + '<div class="ind">'+bd(6)+'<span class="hl"><span class="prop">font-size</span><span class="pun">: </span><span class="val">18px</span><span class="pun">;</span></span></div>'
+   + '<div><span class="pun" style="margin-left:46px">}</span></div></div>'
+   + '<p class="note">Badge 2 marks the curly braces { } and everything between them. Badge 6 marks the whole outlined line.</p>';
+}
+function drawR2(){
+  const b = $("#rbody"); b.innerHTML="";
+  const wrap = el("div","diagwrap");
+  const left = el("div","", ruleHTML());
+  const right = el("div");
+  const prompt = el("p","", "Click a numbered badge on the rule.");
+  prompt.style.cssText="color:var(--dim);margin-bottom:12px";
+  const opts = el("div","opts");
+  right.appendChild(prompt); right.appendChild(opts);
+  wrap.appendChild(left); wrap.appendChild(right); b.appendChild(wrap);
+
+  let current = null, done = 0;
+  const badges = left.querySelectorAll(".badge");
+  function pick(g){
+    if(g.classList.contains("done")) return;
+    badges.forEach(x=>x.classList.remove("on"));
+    g.classList.add("on"); current = +g.dataset.n; clearFb();
+    prompt.textContent = "Part "+current+" is…";
+    opts.innerHTML="";
+    R2.pool.forEach(name=>{
+      const o = el("button","opt","<b>"+esc(name)+"</b>");
+      o.onclick = ()=>{
+        const part = R2.parts.find(p=>p.n===current);
+        const ok = part.name===name;
+        score("B", ok, "Naming part "+current+" of the CSS rule", part.name+" — "+part.why);
+        o.classList.add(ok?"right":"wrong");
+        opts.querySelectorAll(".opt").forEach(x=>x.disabled=true);
+        g.classList.remove("on"); g.classList.add("done"); g.setAttribute("aria-label","Part "+current+", done");
+        feedback(ok, ok?"Correct — "+part.name : "That one is "+part.name.charAt(0).toLowerCase()+part.name.slice(1), part.why);
+        done++;
+        if(done===R2.parts.length) showNext(false);
+        else { prompt.textContent="Click another numbered badge."; setTimeout(()=>{opts.innerHTML="";},1200); }
+      };
+      opts.appendChild(o);
+    });
+    opts.querySelector(".opt").focus();
+  }
+  badges.forEach(g=>{ g.onclick=()=>pick(g); });
+}
+
+/* ------------------------------------------------------------------ round 3: match */
+function drawR3(){
+  const b = $("#rbody"); b.innerHTML="";
+  let sel=null, done=0;
+  const terms = el("div","items");
+  R3.pairs.forEach((p,i)=>{
+    const c = el("button","chip",esc(p[0]));
+    c.setAttribute("aria-pressed","false");
+    c.onclick = ()=>{ if(c.classList.contains("done"))return;
+      terms.querySelectorAll(".chip").forEach(x=>{x.classList.remove("active");x.setAttribute("aria-pressed","false");});
+      c.classList.add("active"); c.setAttribute("aria-pressed","true"); sel={i,c}; clearFb(); };
+    terms.appendChild(c);
+  });
+  b.appendChild(terms);
+  const opts = el("div","opts");
+  const shuffled = R3.pairs.map((p,i)=>({d:p[1],i})).sort(()=>Math.random()-0.5);
+  shuffled.forEach(s=>{
+    const o = el("button","opt", esc(s.d));
+    o.onclick = ()=>{
+      if(!sel){ feedback(false,"Pick a term first","Click one of the terms above, then click its definition."); return; }
+      const ok = sel.i===s.i, p = R3.pairs[sel.i];
+      score("B", ok, "Definition of "+p[0], p[1]+". "+p[2]);
+      sel.c.classList.add("done", ok?"right":"wrong"); sel.c.classList.remove("active"); sel.c.disabled = true;
+      if(ok){ o.classList.add("right"); o.disabled = true; }
+      else { o.classList.add("wrong"); setTimeout(()=>o.classList.remove("wrong"),1400); }
+      feedback(ok, ok?"Correct — "+p[0] : "That's the definition of "+R3.pairs[s.i][0], p[0]+": "+p[1]+". "+p[2]);
+      sel=null; done++;
+      if(done===R3.pairs.length) showNext(false);
+    };
+    opts.appendChild(o);
+  });
+  b.appendChild(opts);
+}
+
+/* ------------------------------------------------------------------ rounds 4-6: multiple choice */
+function drawChoice(R, obj){
+  const b = $("#rbody"); b.innerHTML="";
+  let idx = 0;
+  function step(){
+    b.innerHTML=""; clearFb();
+    const cs = R.cases[idx];
+    const count = el("p","note","Question "+(idx+1)+" of "+R.cases.length);
+    count.style.margin="0 0 8px";
+    b.appendChild(count);
+    const q = el("p","", esc(cs.q));
+    q.style.cssText="font-size:20px;margin-bottom:16px;color:var(--txt)";
+    b.appendChild(q);
+    if(cs.code){ const pre = el("pre","snip", esc(cs.code)); pre.setAttribute("aria-label","Code for this question"); b.appendChild(pre); }
+    const g = el("div","opts");
+    cs.opts.forEach(o=>{
+      const btn = el("button","opt", "<code style=\"color:inherit\">"+esc(o[0])+"</code>");
+      btn.onclick = ()=>{
+        const ok = !!o[1];
+        score(obj, ok, cs.q, cs.why);
+        g.querySelectorAll(".opt").forEach(x=>x.disabled=true);
+        btn.classList.add(ok?"right":"wrong");
+        if(!ok){ [...g.querySelectorAll(".opt")][cs.opts.findIndex(z=>z[1])].classList.add("right"); }
+        feedback(ok, ok?"Correct":"The better answer is marked correct", cs.why);
+        idx++;
+        const nx = $("#next");
+        if(idx<R.cases.length){ nx.textContent="Next question →"; nx.classList.remove("hide"); nx.onclick=()=>{ nx.classList.add("hide"); step(); }; nx.focus(); }
+        else { showNext(R===R6); nx.onclick=advance; }
+      };
+      g.appendChild(btn);
+    });
+    b.appendChild(g);
+  }
+  step();
+}
+
+/* ------------------------------------------------------------------ flow */
+function renderRound(){
+  const R = ROUNDS[ri];
+  $("#rk").textContent = R.kicker;
+  $("#rq").textContent = R.q;
+  $("#rs").textContent = R.sub;
+  clearFb(); $("#next").classList.add("hide"); $("#next").onclick = advance;
+  if(R===R1) drawR1();
+  else if(R===R2) drawR2();
+  else if(R===R3) drawR3();
+  else drawChoice(R, R.obj);
+  progress();
+  window.scrollTo({top:0,behavior:"smooth"});
+  $("#rq").focus({preventScroll:true});
+}
+function advance(){ ri++; if(ri<ROUNDS.length) renderRound(); else finish(); }
+function finish(){
+  progress();
+  $("#round").classList.add("hide");
+  $("#done").classList.remove("hide");
+  const c = Object.values(tally).reduce((a,o)=>a+o.c,0);
+  const t = Object.values(tally).reduce((a,o)=>a+o.t,0);
+  const pct = Math.round(c/t*100);
+  $("#dScore").textContent = pct+"%";
+  $("#dSub").textContent = student ? student+" — "+c+" of "+t+" correct" : c+" of "+t+" correct";
+  $("#dTitle").textContent = pct>=90?"Excellent.":pct>=75?"Solid work.":pct>=60?"Good start.":"Worth another run.";
+  $("#dMsg").textContent = pct>=90 ? "You can add CSS three ways, read every part of a rule, pick the right selector and predict the cascade. That's the whole lesson."
+    : pct>=75 ? "Strong overall. Look at the items below, then you'll have all four objectives covered."
+    : pct>=60 ? "The foundations are there. Re-read the lesson sections for your lowest objective and run this again."
+    : "Go back through the lesson and the slides and try again — the explanations below tell you exactly which parts to revisit.";
+  const sc = $("#dScores"); sc.innerHTML="";
+  Object.keys(OBJ).forEach(k=>{
+    const o = tally[k], p = o.t? Math.round(o.c/o.t*100):0;
+    const col = p>=80?"var(--ok)":p>=60?"var(--warn)":"var(--bad)";
+    const word = p>=80?"strong":p>=60?"getting there":"review this";
+    sc.appendChild(el("div","sc",'<div class="n" style="color:'+col+'">'+p+'%</div><div class="l">'+esc(OBJ[k])+'<br><span style="color:var(--mute)">'+o.c+" of "+o.t+" · "+word+'</span></div>'));
+  });
+  const m = $("#dMiss"); m.innerHTML="";
+  if(!misses.length) m.appendChild(el("p","", '<span style="color:var(--ok)">Nothing missed. Every answer was correct.</span>'));
+  else misses.forEach(x=> m.appendChild(el("div","miss","<b>"+esc(x.label)+"</b>"+esc(x.why))));
+
+  const stamp = new Date().toLocaleString();
+  let out = "PATCH'S CSS CHECK — COMPLETION SUMMARY\n";
+  out += "=========================================\n";
+  out += "Name: "+(student||"(not entered)")+"\n";
+  out += "Completed: "+stamp+"\n";
+  out += "Overall score: "+c+" / "+t+"  ("+pct+"%)\n\n";
+  out += "BY LEARNING OBJECTIVE\n";
+  Object.keys(OBJ).forEach(k=>{ const o=tally[k]; out += "  "+OBJ[k]+": "+o.c+" / "+o.t+"\n"; });
+  out += "\nITEMS I MISSED ("+misses.length+")\n";
+  if(!misses.length) out += "  none\n";
+  else misses.forEach((x,i)=>{ out += "  "+(i+1)+". "+x.label+"\n     -> "+x.why+"\n"; });
+  out += "\nREFLECTION — answer these in your own words before submitting:\n";
+  out += "  1. Which of the four objectives did you score lowest on, and why do you think that is?\n     \n";
+  out += "  2. Copy ONE rule from your own style.css and label its selector, one property\n     and that property's value.\n     \n";
+  out += "  3. In one sentence, without looking: an element has an inline style, an internal\n     rule and an external rule for the same property. Which wins, and why?\n     \n";
+  out += "\nVerification code: "+code(c,t,student)+"\n";
+  $("#dOut").value = out;
+  window.scrollTo({top:0,behavior:"smooth"});
+  $("#dTitle").focus({preventScroll:true});
+}
+function code(c,t,n){
+  let h=0; const s = n+"|"+c+"|"+t+"|"+new Date().toDateString();
+  for(let i=0;i<s.length;i++){ h=(h*31+s.charCodeAt(i))>>>0; }
+  return "CSS-"+c+t+"-"+h.toString(36).toUpperCase().slice(0,6);
+}
+
+/* ------------------------------------------------------------------ init */
+$("#go").onclick = ()=>{
+  student = $("#nm").value.trim();
+  $("#start").classList.add("hide");
+  $("#round").classList.remove("hide");
+  renderRound();
+};
+$("#nm").addEventListener("keydown", e=>{ if(e.key==="Enter") $("#go").click(); });
+$("#copy").onclick = ()=>{
+  const ta = $("#dOut");
+  const done = ()=>{ $("#copy").textContent="Copied ✓"; setTimeout(()=>$("#copy").textContent="Copy summary",1800); };
+  if(navigator.clipboard && window.isSecureContext){ navigator.clipboard.writeText(ta.value).then(done).catch(fallback); }
+  else fallback();
+  function fallback(){ ta.select(); ta.setSelectionRange(0,999999);
+    try{ document.execCommand("copy"); done(); } catch(e){ $("#copy").textContent="Select the text and press Ctrl+C"; } }
+};
+$("#again").onclick = ()=>{ location.reload(); };
+progress();
+</script>
+</body>
+</html>
