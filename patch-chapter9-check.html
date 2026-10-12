@@ -1,0 +1,876 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Patch's Chapter 9 CSS Check</title>
+<style>
+:root{
+  --bg:#0C1220; --bg2:#05080F; --card:#182240; --card2:#1F2C4E; --line:#2E3E63;
+  --txt:#EAF0FA; --dim:#A3B6D3; --mute:#8A9CBC;
+  --purple:#A855F7; --purpleL:#C79BFB; --purpleD:#4B1B8A;
+  --gold:#E0B23C;
+  --ok:#45E39B; --bad:#FF6B87; --warn:#F5BE3E; --blue:#5AAEFF; --teal:#5AD8D8;
+  --r:14px;
+  --fh:Arial,Helvetica,sans-serif; --fb:Calibri,Candara,"Segoe UI",sans-serif; --fm:Consolas,Menlo,monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--txt);font-family:var(--fb);font-size:18px;line-height:1.5;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1120px;margin:0 auto;padding:20px 20px 80px}
+h1,h2,h3{font-family:var(--fh);font-weight:700;letter-spacing:-.2px}
+button{font-family:inherit;font-size:inherit;color:inherit;cursor:pointer;border:none;background:none}
+button:focus-visible,input:focus-visible,textarea:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
+.hide{display:none!important}
+.sr{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+code{font-family:var(--fm);color:var(--teal);font-size:.95em}
+
+header{position:sticky;top:0;z-index:10;background:linear-gradient(180deg,var(--bg) 72%,transparent);padding:14px 0 10px}
+.bar{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.brand{font-family:var(--fh);font-weight:800;font-size:19px}
+.brand span{color:var(--gold)}
+.prog{flex:1;min-width:180px;height:12px;background:var(--card);border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.prog i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--purple),var(--gold));transition:width .35s}
+.pct{font-family:var(--fh);font-size:15px;color:var(--mute);min-width:96px;text-align:right}
+
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:22px}
+.panel{margin-top:22px}
+.kicker{font-family:var(--fh);font-size:13px;font-weight:700;letter-spacing:2px;color:var(--gold);text-transform:uppercase}
+h1.q,h2.q{font-size:30px;margin:8px 0 6px}
+.sub{color:var(--purpleL);font-style:italic;font-size:18px;margin-bottom:20px}
+
+.btn{display:inline-flex;align-items:center;gap:10px;background:var(--card2);border:2px solid var(--line);border-radius:11px;padding:13px 22px;font-family:var(--fh);font-weight:700;font-size:17px;transition:.15s}
+.btn:hover{border-color:var(--purpleL);background:#26355C}
+.btn.primary{background:var(--purpleD);border-color:var(--purple);color:#fff}
+.btn.primary:hover{background:#5F27AE}
+.btn.gold{border-color:var(--gold);color:var(--gold)}
+.row{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-top:22px}
+
+.opts{display:grid;gap:12px;margin-top:6px}
+.opt{text-align:left;width:100%;background:var(--card2);border:2px solid var(--line);border-radius:12px;padding:15px 18px;transition:.15s;font-size:17px;line-height:1.4}
+.opt:hover:not(:disabled){border-color:var(--purpleL)}
+.opt.right{border-color:var(--ok);background:rgba(69,227,155,.13)}
+.opt.wrong{border-color:var(--bad);background:rgba(255,107,135,.13)}
+.opt.right::after{content:"  \2713  correct";color:var(--ok);font-weight:700;font-family:var(--fh);font-size:15px}
+.opt.wrong::after{content:"  \2717  not this one";color:var(--bad);font-weight:700;font-family:var(--fh);font-size:15px}
+.opt b{font-family:var(--fh);display:block;margin-bottom:3px}
+
+.items{display:flex;flex-wrap:wrap;gap:10px;margin:6px 0 18px}
+.chip{background:var(--card2);border:2px solid var(--line);border-radius:999px;padding:9px 18px;font-size:17px;text-align:left}
+.chip.active{border-color:var(--gold);background:#2B2410;color:var(--gold);font-weight:700}
+.chip.done{opacity:.45}
+.chip.right{border-color:var(--ok)}
+.chip.wrong{border-color:var(--bad)}
+
+.bins{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.bin{border:2px dashed var(--line);border-radius:12px;padding:16px;min-height:150px;text-align:left;width:100%}
+.bin:hover{background:rgba(255,255,255,.03)}
+.bin h3{font-size:20px;margin-bottom:4px}
+.bin p{color:var(--mute);font-size:15px;margin-bottom:10px}
+.bin.inl{border-color:var(--teal)} .bin.inl h3{color:var(--teal)}
+.bin.int{border-color:var(--gold)} .bin.int h3{color:var(--gold)}
+.bin.ext{border-color:var(--purpleL)} .bin.ext h3{color:var(--purpleL)}
+.binlist{display:flex;flex-wrap:wrap;gap:8px}
+.binlist span{background:var(--card2);border:1px solid var(--line);border-radius:10px;padding:5px 11px;font-size:14px}
+.binlist span.ok{border-color:var(--ok);color:var(--ok)}
+.binlist span.no{border-color:var(--bad);color:var(--bad)}
+
+.fb{border-radius:12px;padding:15px 18px;margin-top:16px;font-size:17px;border:2px solid}
+.fb.good{border-color:var(--ok);background:rgba(69,227,155,.1)}
+.fb.bad{border-color:var(--warn);background:rgba(245,190,62,.1)}
+.fb b{font-family:var(--fh);display:block;margin-bottom:4px}
+.fb.good b{color:var(--ok)} .fb.bad b{color:var(--warn)}
+
+/* round 2: the rule diagram */
+.diagwrap{display:grid;grid-template-columns:minmax(300px,520px) 1fr;gap:22px;align-items:start}
+.rule{background:var(--bg2);border:2px solid var(--line);border-radius:14px;padding:18px 16px;font-family:var(--fm);font-size:22px;line-height:2.2;white-space:nowrap;overflow-x:auto}
+.rule .ind{padding-left:34px}
+.rule .sel{color:var(--purpleL)} .rule .prop{color:var(--teal)} .rule .val{color:var(--gold)} .rule .pun{color:var(--txt)}
+.badge{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:50%;background:var(--bg2);border:3px solid var(--gold);color:var(--gold);font-family:var(--fh);font-weight:700;font-size:17px;vertical-align:middle;margin:0 6px;line-height:1}
+.badge.on{background:var(--gold);color:#0C1220}
+.badge.done{border-color:var(--ok);color:var(--ok)}
+.hl{outline:2px solid var(--line);border-radius:6px;padding:0 3px}
+
+.snip{font-family:var(--fm);background:var(--bg2);border:1px solid var(--line);border-radius:10px;padding:12px 16px;margin:0 0 16px;font-size:16px;line-height:1.6;white-space:pre-wrap;color:var(--txt)}
+
+.scores{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px;margin:20px 0}
+.sc{background:var(--card2);border:2px solid var(--line);border-radius:12px;padding:16px}
+.sc .n{font-family:var(--fh);font-size:38px;font-weight:700}
+.sc .l{color:var(--dim);font-size:15px;margin-top:4px}
+.big{font-family:var(--fh);font-size:64px;font-weight:700;color:var(--gold);line-height:1}
+.miss{border-left:4px solid var(--warn);padding:12px 0 12px 16px;margin:14px 0}
+.miss b{font-family:var(--fh);display:block;color:var(--warn);margin-bottom:3px}
+textarea{width:100%;min-height:230px;background:var(--bg2);color:var(--txt);border:2px solid var(--line);border-radius:12px;padding:15px;font-family:var(--fm);font-size:15px;line-height:1.55;resize:vertical}
+input[type=text]{background:var(--bg2);color:var(--txt);border:2px solid var(--line);border-radius:11px;padding:13px 16px;font-family:inherit;font-size:18px;width:100%;max-width:420px}
+label{display:block;font-family:var(--fh);font-weight:700;margin-bottom:8px;font-size:17px}
+ul.plain{list-style:none;display:grid;gap:10px;margin-top:12px}
+ul.plain li{padding-left:30px;position:relative;color:var(--dim)}
+ul.plain li::before{content:"";position:absolute;left:6px;top:.55em;width:9px;height:9px;border-radius:50%;background:var(--gold)}
+.note{color:var(--mute);font-size:15px;margin-top:10px}
+@media (max-width:860px){
+  body{font-size:17px}
+  .bins,.diagwrap{grid-template-columns:1fr}
+  h1.q,h2.q{font-size:25px} .big{font-size:52px}
+  .rule{font-size:19px}
+}
+@media print{
+  body{background:#fff;color:#000} .noprint{display:none!important}
+  .card,.sc{border:1px solid #999;background:#fff}
+  .big{color:#000} textarea{background:#fff;color:#000}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+
+/* Chapter 9 additions */
+.bin.pc{border-color:var(--teal)} .bin.pc h3{color:var(--teal)}
+.bin.pe{border-color:var(--gold)} .bin.pe h3{color:var(--gold)}
+.bin.cb{border-color:var(--purpleL)} .bin.cb h3{color:var(--purpleL)}
+.streak{font-family:var(--fh);font-size:15px;color:var(--gold);min-width:110px}
+/* round 2: the box model diagram is itself built with position: relative + absolute */
+.bm{position:relative;border:2px dashed var(--mute);border-radius:12px;padding:40px;background:repeating-linear-gradient(45deg,transparent 0 9px,rgba(255,255,255,.035) 9px 18px)}
+.bm-b{position:relative;border:12px solid var(--gold);border-radius:6px}
+.bm-p{position:relative;background:rgba(168,85,247,.28);padding:40px}
+.bm-c{position:relative;background:var(--bg2);border:1px dashed var(--teal);padding:18px 14px;text-align:center;font-family:var(--fh);color:var(--txt)}
+.bm .badge{position:absolute;margin:0}
+.bm .b1{top:3px;left:3px}
+.bm .b2{top:-23px;right:30px}
+.bm .b3{top:3px;left:3px}
+.bm .b4{top:-17px;right:-17px}
+.short{margin-top:16px;background:var(--bg2);border:2px solid var(--line);border-radius:14px;padding:14px 16px;font-family:var(--fm);font-size:21px;line-height:2.2;white-space:nowrap;overflow-x:auto}
+.short .prop{color:var(--teal)} .short .val{color:var(--gold)}
+.short .badge{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:50%;background:var(--bg2);border:3px solid var(--gold);color:var(--gold);font-family:var(--fh);font-weight:700;font-size:17px;vertical-align:middle;margin:0 4px;line-height:1}
+.short .badge.on{background:var(--gold);color:#0C1220}
+.short .badge.done{border-color:var(--ok);color:var(--ok)}
+.diagwrap>*{min-width:0}
+@media (max-width:520px){.bm{padding:32px 26px}.bm-p{padding:34px 18px}.short{font-size:17px}}
+.labgrid{display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:start}
+.labgrid>*{min-width:0}
+.sbx{margin-top:12px;background:#F7F3EA;color:#2A2118;border-radius:12px;padding:16px 18px;font-family:Georgia,serif;font-size:16px;line-height:1.45}
+.sbx h2{font-size:20px;margin:4px 0 6px;font-family:Georgia,serif;color:#2A2118}
+.sbx p{margin:0 0 6px} .sbx ul{margin:0 0 8px 22px} .sbx section{margin-top:8px;padding:6px 10px;background:#EDE5D4;border-radius:8px}
+.sbx .lit{outline:3px solid var(--gold);outline-offset:2px;background:rgba(224,178,60,.35);border-radius:4px}
+.ctl{display:grid;grid-template-columns:1fr 1fr;gap:10px 14px;margin-bottom:14px}
+.cg label{font-size:14px;margin-bottom:4px} .cg code{color:var(--teal)}
+select{width:100%;background:var(--bg2);color:var(--txt);border:2px solid var(--line);border-radius:10px;padding:9px 10px;font-family:var(--fm);font-size:16px}
+select:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+.stage{position:relative;background:#F7F3EA;color:#2A2118;border-radius:12px;padding:18px;min-height:340px;font-family:Georgia,serif;font-size:15px;line-height:1.45;overflow:hidden}
+.stage p{margin:0 0 6px}
+.mcard{background:#fff;border:2px solid #C9B99A;border-radius:10px;padding:12px 14px;margin:0 0 14px;width:78%}
+.mtag{background:#7C3AED;color:#fff;font-family:Arial,sans-serif;font-weight:700;font-size:13px;padding:3px 9px;border-radius:999px}
+.mphoto{width:90px;height:90px;background:#C58B55;color:#fff;border-radius:8px;display:flex;align-items:center;justify-content:center;font-family:Arial,sans-serif;font-size:13px;margin:0 10px 6px}
+.mfoot{background:#2A2118;color:#F7F3EA;font-family:Arial,sans-serif;font-size:13px;padding:6px 10px;border-radius:6px;margin-top:6px}
+@media (max-width:860px){.labgrid{grid-template-columns:1fr}}
+.read{display:block;margin-top:6px;color:var(--purpleL);font-size:15px;font-style:italic}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="noprint">
+  <div class="bar">
+    <div class="brand">PATCH<span>'S</span> CHAPTER 9 CHECK</div>
+    <div class="prog" role="progressbar" aria-label="Progress" aria-valuemin="0" aria-valuemax="9" aria-valuenow="0" id="pwrap"><i id="pbar"></i></div>
+    <div class="streak" id="streak" aria-live="off">Streak: 0</div>
+    <div class="pct" id="pct">Not started</div>
+  </div>
+</header>
+
+<main>
+<!-- ============ START ============ -->
+<section id="start" class="card panel">
+  <div class="kicker">ITD 110 &middot; Chapter 9 &middot; Interactive assignment</div>
+  <h1 class="q">Patch's Chapter 9 Check</h1>
+  <p class="sub">Patch's Caf&eacute; website is a mess. Nine rounds to fix it, including two hands-on labs where you type selectors and move elements yourself. About 30 minutes. Every answer comes with an explanation and the Chapter 9 section to re-read.</p>
+  <p style="color:var(--dim)">Read Chapter 9 first if you can. If you haven't, this teaches you as you go: every answer explains the idea and names the section to read. It covers the four things the chapter teaches:</p>
+  <ul class="plain">
+    <li>Target exactly the right element with pseudo-classes, combinators and pseudo-elements</li>
+    <li>Use the box model: margin, border, padding, content, and sizing with px, %, vw/vh, em and rem</li>
+    <li>Position elements: static, relative, absolute and fixed, plus float and clear</li>
+    <li>Control display (none, block, inline-block, flex) and predict which rule wins (!important and &ldquo;last one wins&rdquo;)</li>
+  </ul>
+  <div style="margin-top:26px">
+    <label for="nm">Your name (this goes on the summary you turn in)</label>
+    <input type="text" id="nm" placeholder="e.g. Jordan Rivera" autocomplete="name">
+  </div>
+  <div class="row"><button class="btn primary" id="go">Start round 1 &rarr;</button></div>
+  <p class="note">Nothing is saved to a server. When you finish you'll get a summary to paste into Canvas &mdash; so don't close the tab until you've copied it. Your streak counts correct answers in a row. See how high you can get it.</p>
+</section>
+
+<!-- ============ ROUNDS ============ -->
+<section id="round" class="card panel hide" aria-labelledby="rq">
+  <div class="kicker" id="rk"></div>
+  <h2 class="q" id="rq" tabindex="-1"></h2>
+  <p class="sub" id="rs"></p>
+  <div id="rbody"></div>
+  <div id="fb" aria-live="polite"></div>
+  <div class="row"><button class="btn primary hide" id="next">Next &rarr;</button></div>
+</section>
+
+<!-- ============ RESULTS ============ -->
+<section id="done" class="card panel hide" aria-labelledby="dTitle">
+  <div class="kicker">Finished</div>
+  <h2 class="q" id="dTitle" tabindex="-1">Nice work.</h2>
+  <p class="sub" id="dSub"></p>
+  <div style="display:flex;align-items:center;gap:26px;flex-wrap:wrap">
+    <div><div class="big" id="dScore">0%</div><div style="color:var(--mute);font-size:15px">overall</div></div>
+    <div id="dMsg" style="flex:1;min-width:260px;color:var(--dim)"></div>
+  </div>
+  <div class="scores" id="dScores"></div>
+  <h3 style="font-size:22px;margin-top:26px">Worth another look</h3>
+  <div id="dMiss"></div>
+  <h3 style="font-size:22px;margin-top:30px">Turn this in</h3>
+  <p style="color:var(--dim);margin-bottom:12px">Answer the three reflection questions inside the box, then copy everything and paste it into the Canvas assignment, or use Print to save it as a PDF.</p>
+  <label for="dOut" class="sr">Completion summary</label>
+  <textarea id="dOut" style="min-height:340px"></textarea>
+  <div class="row noprint">
+    <button class="btn primary" id="copy">Copy summary</button>
+    <button class="btn gold" onclick="window.print()">Print / save as PDF</button>
+    <button class="btn" id="again">Start over</button>
+  </div>
+</section>
+</main>
+
+</div>
+<script>
+"use strict";
+/* ------------------------------------------------------------------ data */
+const OBJ = {
+  A:"Target elements with pseudo-classes, combinators and pseudo-elements",
+  B:"Use the box model and size elements",
+  C:"Position elements (static, relative, absolute, fixed, float, clear)",
+  D:"Control display and predict which rule wins"
+};
+
+/* Round 1: [label, bin, why, isCode] */
+const R1 = {
+  obj:"A", q:"Pseudo-class, pseudo-element or combinator?",
+  sub:"Patch's menu page uses all three. Click an item, then click the bin it belongs in.",
+  bins:[["pc","PSEUDO-CLASS","One colon. Picks an element by its state or its position."],
+        ["pe","PSEUDO-ELEMENT","Two colons. Styles a PART of an element, or adds decoration."],
+        ["cb","COMBINATOR","A space, >, + or ~. Links two selectors by family relationship."]],
+  names:{pc:"a pseudo-class",pe:"a pseudo-element",cb:"a combinator"},
+  items:[
+    ["ul li:first-child","pc","Pseudo-class. :first-child picks an element by its POSITION: the first child of its parent. One colon. (Chapter 9, Table 9-1 and “Apply Contextual Formatting with Pseudo-Classes”)",1],
+    ["p::first-letter","pe","Pseudo-element. ::first-letter styles only a PART of the paragraph, its first letter, which is how you build a drop cap. Two colons. (Table 9-3)",1],
+    ["div > h2","cb","Combinator. The > is the child selector: h2 elements that are direct children of a div. (Table 9-2)",1],
+    ["a:hover","pc","Pseudo-class. :hover is a STATE: the element only matches while the pointer is over it. (Table 9-1)",1],
+    ["h1 + p","cb","Combinator. The + is the adjacent sibling selector: the p that comes immediately after an h1. (Table 9-2)",1],
+    ["::selection","pe","Pseudo-element. ::selection styles the part of the page the visitor has highlighted by dragging. (Table 9-3)",1],
+    ["Picks every second list item so the menu gets zebra stripes","pc","Pseudo-class. li:nth-child(2n) picks items by their position: 2, 4, 6 and so on. (“Apply Contextual Formatting with Pseudo-Classes”)",0],
+    ["Adds a decorative line after every h2 without adding any HTML","pe","Pseudo-element. h2::after with content: \"\"; draws decoration after the element. The chapter says to use pseudo-elements for decoration, not real content. (“Apply CSS to Pseudo-Elements”)",0],
+    ["Selects every p that comes after an h2 in the same parent, not just the first one","cb","Combinator. The ~ is the general sibling selector: every following sibling, near or far. (Table 9-2)",0],
+    ["The plain space in  ul li","cb","Combinator. A space is the descendant selector: li anywhere inside a ul, children, grandchildren and deeper. (Table 9-2)",0],
+    ["Styles only the first line of each paragraph, however wide the window is","pe","Pseudo-element. ::first-line follows the line as the window resizes, so you can't do this with a span. (Table 9-3)",0],
+    ["Matches a form field only while the visitor is typing in it","pc","Pseudo-class. :focus is a state. The element matches only while it has keyboard focus. (Table 9-1)",0]
+  ]
+};
+
+/* Round 2: the box model diagram */
+const R2 = {
+  obj:"B", q:"Label Patch's box",
+  sub:"Every element is a box. Click a numbered badge, then choose what that part is. (Fun fact: the badges are placed with position: absolute inside position: relative boxes.)",
+  parts:[
+    {n:1,name:"Margin",why:"Margin is the clear space OUTSIDE the border. It pushes neighbors away and has no background color. (Chapter 9, “Understanding the CSS Box Model”)"},
+    {n:2,name:"Border",why:"The border is the line around the box, between padding and margin. Set border: none; to hide it."},
+    {n:3,name:"Padding",why:"Padding is the space INSIDE the border, between the border and the content. It takes the element's background color."},
+    {n:4,name:"Content",why:"Content is the text or image itself. By default, width and height size only this part (content-box)."},
+    {n:5,name:"The bottom side",why:"Four values go clockwise from the top: top, right, bottom, left. The third value, 15px, is the bottom. (“Set Margins, Borders, and Padding Using Shorthand Properties”)"},
+    {n:6,name:"The left side",why:"Clockwise from the top: top, right, bottom, LEFT. The fourth value is always the left side. Remember TRouBLe."}
+  ],
+  pool:["Margin","Border","Padding","Content","The bottom side","The left side"]
+};
+
+/* Round 3: match positioning terms */
+const R3 = {
+  obj:"C", q:"Match the positioning term",
+  sub:"Patch wants a price tag pinned on each card and a cart button that never scrolls away. First, know your tools. Click a term, then click its definition.",
+  pairs:[
+    ["position: static","The default. Elements appear in the order they are written in the HTML","top, right, bottom and left do nothing on a static element. (“Understanding CSS Positioning Essentials”)"],
+    ["position: relative","Moves an element from its normal spot, but its original space stays reserved","Other elements do not slide into the gap, so big moves leave holes. Use it for small nudges, and to make a parent a positioned ancestor. (“Understanding CSS Positioning Essentials”: Relative Positioning)"],
+    ["position: absolute","Places an element measured from its nearest positioned ancestor","If no ancestor is positioned, it is measured from the initial containing block, which means the whole page. (“Understanding CSS Positioning Essentials”: Absolute Positioning)"],
+    ["position: fixed","Keeps an element in the same spot in the viewport even while the page scrolls","Use it for things that must always be visible, like a back-to-top button. (“Fix an Element in Place in the Viewport”)"],
+    ["Nearest positioned ancestor","The closest parent or grandparent whose position is anything other than static","That is why you put position: relative; on a card before you absolutely position its price tag."],
+    ["Initial containing block","The box that holds all of the web page's content","An absolute element with no positioned ancestor is measured from here."],
+    ["float: right","Moves an element to the right edge and lets text wrap around its left side","float takes left, right or inherit. There is no float: center. (“Float an Element Beside Another Element”)"],
+    ["clear: both","Moves an element down below floated elements on either side","clear takes left, right, both, inherit or none. none is the default, so you never need to type it."]
+  ]
+};
+
+/* Round 4: which selector? */
+const R4 = {
+  obj:"A", q:"Which selector would you write?",
+  sub:"Seven jobs on Patch's menu page. Pick the selector that targets exactly what is asked, no more and no less.",
+  cases:[
+    {q:"Bold only the FIRST item in each unordered list on the menu.",
+     opts:[["ul li:first-child",1],["ul:first-child li",0],["ul li::first",0],["ul + li",0]],
+     why:"The pseudo-class goes on the element you want to style: li:first-child. ul:first-child li would style every li inside a ul that is itself a first child. Re-read “Apply Contextual Formatting with Pseudo-Classes.”"},
+    {q:"Zebra stripes: shade every SECOND menu item (2, 4, 6…).",
+     opts:[["ul li:nth-child(2)",0],["ul li:nth-child(2n)",1],["ul li:second-child",0],["ul li + li",0]],
+     why:"2n means every multiple of 2. Plain (2) hits only the second item. :second-child does not exist, and li + li would hit every item except the first."},
+    {q:"Style h2 elements that are DIRECT children of the div, but not h2s buried deeper inside a section in that div.",
+     opts:[["div h2",0],["div > h2",1],["div + h2",0],["div ~ h2",0]],
+     why:"> is the child selector: one level down only. A space (descendant) would also catch the deeper h2s. + and ~ select siblings, not children. Table 9-2."},
+    {q:"Give EVERY paragraph that follows an h2 (in the same parent) a left indent, not just the first one.",
+     opts:[["h2 + p",0],["h2 ~ p",1],["h2 p",0],["h2 > p",0]],
+     why:"~ is the general sibling selector: all following siblings. + stops at the one paragraph right after the h2. h2 p and h2 > p look for paragraphs INSIDE the h2, and there are none. Table 9-2."},
+    {q:"Make a drop cap: the first letter of each paragraph in the article is 3em tall.",
+     opts:[["article p:first-child",0],["article p::first-letter",1],["article::first-letter p",0],["article p::first-char",0]],
+     why:"::first-letter is the pseudo-element for this. It goes at the END of the selector, after the element it belongs to. ::first-char isn't real, and :first-child would style the whole first paragraph. Table 9-3."},
+    {q:"Patch wrote  h2::after { border-bottom: 3px solid; }  and no line appears. What is missing?",
+     opts:[["display: flex;",0],["content: \"\";",1],["position: fixed;",0],["!important",0]],
+     why:"::after (and ::before) only render when they have a content property, even an empty one. The chapter's own example starts with content: \"\";. Re-read “Apply CSS to Pseudo-Elements.”"},
+    {q:"Change the highlight color when a visitor drags to select text on the page.",
+     opts:[[":hover",0],["::selection",1],[":focus",0],["::first-line",0]],
+     why:"::selection styles the part of the page the visitor has selected. It is one of the five pseudo-elements the chapter says every current browser supports."}
+  ]
+};
+
+/* Round 5: where does it land? */
+const R5 = {
+  obj:"C", q:"Where does it land?",
+  sub:"Read the code, then predict where the browser actually puts the element. This is the round people miss most.",
+  cases:[
+    {q:"Where does the box move?",
+     code:".box {\n  position: relative;\n  top: 30px;\n  left: 20px;\n}",
+     opts:[["30px down and 20px to the RIGHT; its old space stays empty",1],["30px up and 20px to the left",0],["To the top-left corner of the page",0],["Nowhere. top and left need position: absolute",0]],
+     why:"top: 30px means 30px away from where its top edge was, so it moves DOWN. left: 20px pushes it away from its left edge, so it moves RIGHT. The browser keeps its old space reserved. (“Understanding CSS Positioning Essentials”: Relative Positioning)"},
+    {q:"No element on the page has a position set. Where does .upright go?",
+     code:".upright {\n  position: absolute;\n  top: 0;\n  right: 0;\n}",
+     opts:[["The upper-right corner of the initial containing block (the page)",1],["The upper-right corner of its parent",0],["It stays where it is",0],["The upper-right of the window, even while scrolling",0]],
+     why:"With no positioned ancestor, absolute is measured from the initial containing block. Staying put while scrolling would be fixed, not absolute. (“Understanding CSS Positioning Essentials”: Absolute Positioning)"},
+    {q:"Patch's price tag sits inside a menu card. Where does the tag go?",
+     code:".card { position: relative; }\n.tag  { position: absolute; top: 10px; right: 10px; }\n\n<div class=\"card\"> ... <span class=\"tag\">$4</span> </div>",
+     opts:[["10px in from the top-right corner of the CARD",1],["10px in from the top-right corner of the page",0],["10px down and 10px left of where the span was",0],["It disappears",0]],
+     why:"The card has position: relative, so it is the tag's nearest positioned ancestor. This pair, relative parent and absolute child, is the most useful positioning pattern you will write."},
+    {q:"Same tag, but someone deleted  .card { position: relative; }  What happens?",
+     code:".tag { position: absolute; top: 10px; right: 10px; }",
+     opts:[["Every tag jumps to the top-right of the page and they stack on top of each other",1],["Nothing changes",0],["The tags line up in a row",0],["The tags become fixed",0]],
+     why:"Without a positioned ancestor, every tag is measured from the initial containing block, so they all land in the same corner. When an absolute element flies away, check that its parent is positioned."},
+    {q:"The visitor scrolls down a long menu. Where is the .keep button?",
+     code:".keep {\n  position: fixed;\n  left: 0;\n  bottom: 0;\n  padding: 10px;\n}",
+     opts:[["Still in the lower-left corner of the window",1],["At the bottom of the page; you scroll down to reach it",0],["Back at the top of the page",0],["Wherever it was in the HTML",0]],
+     why:"fixed is measured from the viewport, not the document, so it stays on screen while the page scrolls. (“Fix an Element in Place in the Viewport”)"},
+    {q:"What does the photo do to the paragraph that follows it?",
+     code:"img.dish { float: right; }\n\n<img class=\"dish\" src=\"latte.jpg\" alt=\"Latte\">\n<p>Our latte is made with...</p>",
+     opts:[["The photo moves to the right and the text wraps down its left side",1],["The photo moves right and the text starts below it",0],["The photo is centered",0],["The text floats right too",0]],
+     why:"A floated element moves to one side and the following content wraps around it. To stop the wrap, put clear on the element that should start below. (“Float an Element Beside Another Element”)"},
+    {q:"Patch's footer is creeping up beside a floated sidebar. Which declaration on the footer fixes it?",
+     opts:[["clear: both;",1],["float: none;",0],["position: static;",0],["display: inline;",0]],
+     why:"clear: both moves the footer below floats on either side. float: none on the footer doesn't help: the footer isn't the one floating."},
+    {q:"What happens to this heading?",
+     code:"h1 {\n  position: static;\n  top: 50px;\n}",
+     opts:[["Nothing moves. top is ignored on a static element",1],["It moves 50px down",0],["It moves 50px up",0],["It goes 50px from the top of the page",0]],
+     why:"static is the default and means “normal flow.” top, right, bottom and left only work once position is relative, absolute or fixed."}
+  ]
+};
+
+/* Round 6: size it */
+const R6 = {
+  obj:"B", q:"Size it right",
+  sub:"Patch's cards keep coming out the wrong size. Do the math. Scratch paper is allowed.",
+  cases:[
+    {q:"How wide is this card on screen?",
+     code:".card {\n  box-sizing: border-box;\n  width: 300px;\n  padding: 20px;\n  border: 5px solid;\n}",
+     opts:[["300px",1],["340px",0],["350px",0],["360px",0]],
+     why:"border-box makes width include the padding and the border, so the box is exactly 300px. With the default content-box it would be 300 + 40 + 10 = 350px. (“Choose Whether to Size the Content Box or the Border Box”)"},
+    {q:"Same card, but with no box-sizing line (the default). How wide is it?",
+     code:".card {\n  width: 300px;\n  padding: 20px;\n  border: 5px solid;\n}",
+     opts:[["300px",0],["320px",0],["350px",1],["345px",0]],
+     why:"Default content-box: width is only the content. Add 20px padding on each side (40) and a 5px border on each side (10). 300 + 40 + 10 = 350."},
+    {q:"How much padding is on the BOTTOM?",
+     code:"padding: 20px 5px 10px;",
+     opts:[["20px",0],["5px",0],["10px",1],["None",0]],
+     why:"Three values mean top, then left-and-right, then bottom. So: 20px top, 5px on the sides, 10px bottom. The chapter says four values are easiest to read."},
+    {q:"The root font size is 16px. How big is 1.5rem?",
+     opts:[["16px",0],["24px",1],["1.5px",0],["150% of the parent",0]],
+     why:"rem is relative to the ROOT (html) font size: 1.5 × 16 = 24px. em is relative to the CURRENT element's font size instead. Table 9-4."},
+    {q:"Patch's hero banner has  height: 50vh;  What does that mean?",
+     opts:[["Half the height of the viewport",1],["50 pixels",0],["Half the height of the parent",0],["50% of the page's total length",0]],
+     why:"vh is 1/100 of the viewport height, so 50vh is half the visible window. % is relative to the parent instead. Table 9-4."},
+    {q:"The menu text gets too long to read on a wide monitor. What keeps it readable but still shrinks on a phone?",
+     opts:[["max-width: 600px;",1],["width: 600px;",0],["min-width: 600px;",0],["height: 600px;",0]],
+     why:"max-width caps the width but still lets the box get narrower. A fixed width: 600px would overflow a phone. min-width does the opposite: it stops the box from getting narrower. (“Specify Maximum or Minimum Width or Height for an Element”)"},
+    {q:"Patch wants the coupon card to overlap the card above it. Which declaration on the coupon does that?",
+     opts:[["margin-top: -20px;",1],["padding-top: -20px;",0],["margin-top: 20px;",0],["border-top: -20px;",0]],
+     why:"A negative margin pulls the element toward its neighbor, so it overlaps. Padding can't be negative. Check the result afterward. (“Set Margins to Control Element Spacing”)"}
+  ]
+};
+
+/* Round 7: display and who wins */
+const R7 = {
+  obj:"D", q:"Display it, and who wins?",
+  sub:"Last round. Show, hide and line things up, then settle the arguments between rules.",
+  cases:[
+    {q:"Patch wants to hide the “Sold out” banner completely so it takes up no space. Which rule goes in .hide?",
+     opts:[["display: none;",1],["display: hidden;",0],["position: static;",0],["float: none;",0]],
+     why:"display: none removes the element from the page entirely. hidden is not a display value. Table 9-5 and “Control the Display of an Element,” where the chapter builds this exact .hide class."},
+    {q:"A <span class=\"force-block\"> has  display: block;  What changes?",
+     opts:[["It takes the full width and pushes what comes next onto a new line",1],["Nothing. A span is always inline",0],["It disappears",0],["It floats left",0]],
+     why:"block makes an element take the full width available and start a new line, even if it is normally inline. The chapter's .force-block example in “Control the Display of an Element” does exactly this."},
+    {q:"You need badges that sit side by side on one line, but you also need to set their width and height. Which display value?",
+     opts:[["inline",0],["inline-block",1],["block",0],["none",0]],
+     why:"inline-block stays on the line like inline, but lets you set width and height. Plain inline ignores width and height. Table 9-5."},
+    {q:"Center Patch's logo both across and down inside the header. Which pair goes on the header after display: flex?",
+     opts:[["justify-content: center;  align-items: center;",1],["text-align: center;  float: center;",0],["align-content: middle;  justify-items: middle;",0],["position: center;  top: 50%;",0]],
+     why:"justify-content aligns flex items along the main axis; align-items aligns them along the cross axis. Together they center both ways. Table 9-6, “Create a Flexbox Layout.”"},
+    {q:"What color AND weight are the definition terms?",
+     code:"dt {\n  color: red !important;\n  font-weight: 900;\n}\ndt {\n  color: blue;\n  font-weight: 400;\n}",
+     opts:[["red, weight 400",1],["blue, weight 400",0],["red, weight 900",0],["blue, weight 900",0]],
+     why:"!important only protects the ONE declaration it is on. color stays red; font-weight follows the normal rule, last one wins, so 400. This is the chapter's exact example. (“Override CSS by Using the !important Declaration”)"},
+    {q:"Same style sheet, two definitions, no !important. Which one does the browser use?",
+     code:"p { color: green; }\n/* ...forty lines later... */\np { color: purple; }",
+     opts:[["purple, the one it reads last",1],["green, the one it reads first",0],["A mix of both",0],["Neither; it's an error",0]],
+     why:"The browser reads the style sheet top to bottom and applies the last definition it meets. When a style you wrote “does nothing,” look further down the file."},
+    {q:"Patch is quoting a food critic. Which HTML gives the quote MEANING, not just an indent?",
+     opts:[["<blockquote> … <cite>The Daily Bite</cite></blockquote>",1],["<p style=\"margin-left:40px\"> …</p>",0],["<div class=\"indent\"> …</div>",0],["<q-block> …</q-block>",0]],
+     why:"blockquote tells search engines and screen readers that this is a quotation, and cite marks the source. Then you style both with CSS. (“Create Block Quotes”)"}
+  ]
+};
+
+/* ------------------------------------------------------------------ state */
+
+/* ------------------------------------------------------------------ LAB rounds: learn by doing */
+const SBX_HTML =
+'<div class="menu">\n  <p class="hours">Open 7 to 3 daily</p>\n  <h2>Today\'s Menu</h2>\n  <p>Everything is made fresh each morning.</p>\n  <p>Ask about oat, almond and soy milk.</p>\n  <ul class="drinks">\n    <li>Oat latte</li>\n    <li>Cold brew</li>\n    <li>Chai latte</li>\n    <li>Hot chocolate</li>\n    <li>Matcha latte</li>\n    <li>Drip coffee</li>\n  </ul>\n  <section class="specials">\n    <h2>Weekend Specials</h2>\n    <ul>\n      <li>Maple scone</li>\n      <li>Lavender lemonade</li>\n    </ul>\n  </section>\n</div>';
+
+const L1 = {
+  obj:"A", lab:"sel", q:"Selector Lab",
+  sub:"Learn by doing. Type a selector and watch Patch's mini page: everything it matches lights up gold. When exactly the right elements glow, press Check. Wrong guesses are free to try live; only Check counts.",
+  cases:[
+    {task:"Light up every drink in the drinks list, and nothing in the weekend specials.", want:".drinks li",
+     hint:"Plain li also catches the two specials. Start with the class of the list, then a SPACE, then li. The space means “anywhere inside” — the descendant combinator.",
+     why:"A space is the descendant combinator: .drinks li means every li anywhere inside the element with class drinks. (Table 9-2)"},
+    {task:"Light up only the FIRST drink.", want:".drinks li:first-child",
+     hint:"Add a pseudo-class to the end of your last selector. It describes a position: the first child. One colon.",
+     why:":first-child is a pseudo-class for position. On its own, li:first-child would also catch Maple scone, the first li in the specials list. (“Apply Contextual Formatting with Pseudo-Classes”)"},
+    {task:"Zebra stripes: light up every SECOND drink (2, 4, 6).", want:".drinks li:nth-child(2n)",
+     hint:"The pseudo-class is :nth-child( ). Inside the parentheses, 2 means only the second one; you want every multiple of 2.",
+     why:":nth-child(2n) picks 2, 4, 6 and so on. :nth-child(2) only picks the second. :nth-child(even) does the same as 2n. (“Apply Contextual Formatting with Pseudo-Classes”)"},
+    {task:"Light up only the h2 that is a DIRECT child of .menu — not Weekend Specials.", want:".menu > h2",
+     hint:"Typing h2 or .menu h2 catches both headings, because Weekend Specials is inside a section inside .menu. You need the combinator that only goes one level down.",
+     why:"> is the child combinator: one level down only. Weekend Specials is a grandchild of .menu, so .menu > h2 skips it. (Table 9-2, “Target an Element with a Child Selector”)"},
+    {task:"Light up only the paragraph IMMEDIATELY after the Today's Menu heading.", want:"h2 + p",
+     hint:"You want the next sibling only. The adjacent sibling combinator is a plus sign between two selectors.",
+     why:"+ is the adjacent sibling combinator: the p that comes right after an h2, sharing the same parent. (Table 9-2)"},
+    {task:"Now light up EVERY paragraph that comes after that heading in the same parent — but not the opening-hours line above it.", want:"h2 ~ p",
+     hint:"Change one character in your last answer. The general sibling combinator is the tilde (~).",
+     why:"~ is the general sibling combinator: every following sibling, not just the next one. (Table 9-2, “Target an Element with a General Sibling Selector”)"}
+  ]
+};
+
+const L2 = {
+  obj:"C", lab:"pos", q:"Position Lab",
+  sub:"Learn by doing. Change the settings and watch the mini page move. When it matches the job, press Check. The mini page plays the part of the whole web page, the initial containing block.",
+  cases:[
+    {task:"Pin the $4 tag in the top-right corner of its CARD, 10px in from the top and the right.",
+     ok:s=>s.card==="relative"&&s.tag==="absolute"&&s.top==="10px"&&s.right==="10px",
+     hint:"The tag needs absolute. But absolute is measured from the nearest POSITIONED ancestor, so the card needs a position other than static too.",
+     why:"position: relative on the card makes it the tag's nearest positioned ancestor; position: absolute with top and right on the tag pins it to the card's corner. (“Understanding CSS Positioning Essentials”)"},
+    {task:"Now break it on purpose: make the tag fly to the top-right corner of the whole mini PAGE (top 0, right 0).",
+     ok:s=>s.card==="static"&&s.tag==="absolute"&&s.top==="0px"&&s.right==="0px",
+     hint:"Keep the tag absolute, but take away the card's position. With no positioned ancestor, absolute is measured from the page.",
+     why:"With no positioned ancestor, an absolute element is measured from the initial containing block, the box holding the whole page. That is why price tags “fly away” when the card loses position: relative."},
+    {task:"Nudge the tag 10px DOWN from where it normally sits, without moving anything else on the card.",
+     ok:s=>s.tag==="relative"&&s.top==="10px"&&(s.right==="auto"||s.right==="0px"),
+     hint:"You want to move it from its NORMAL spot and keep its space reserved. That is relative positioning, with only top set.",
+     why:"position: relative moves an element from its normal position, and the browser keeps its original space reserved, so nothing else shifts. (“Understanding CSS Positioning Essentials”: Relative Positioning)"},
+    {task:"Float the photo to the RIGHT so the story text wraps around it, then make the footer start BELOW the photo.",
+     ok:s=>s.float==="right"&&(s.clear==="both"||s.clear==="right"),
+     hint:"Two settings: float on the photo, and clear on the footer. clear: both moves an element below floats on either side.",
+     why:"float: right moves the photo to the right edge and lets text wrap around it; clear on the footer pushes it below the float. (“Float an Element Beside Another Element”)"}
+  ]
+};
+
+function labFrame(R, render, check, reveal, after){
+  /* shared retry logic: correct if solved in 2 Checks or fewer; "Show me" after 3 misses */
+  const b = $("#rbody"); let idx = 0;
+  function step(){
+    b.innerHTML=""; clearFb();
+    const cs = R.cases[idx]; let tries = 0, settled = false;
+    const count = el("p","note","Challenge "+(idx+1)+" of "+R.cases.length); count.style.margin="0 0 8px"; b.appendChild(count);
+    const q = el("p","", esc(cs.task)); q.style.cssText="font-size:20px;margin-bottom:16px;color:var(--txt)"; b.appendChild(q);
+    const area = el("div"); b.appendChild(area);
+    render(area, cs);
+    const row = el("div","row"); const chk = el("button","btn primary","Check"); const show = el("button","btn hide","Show me");
+    row.appendChild(chk); row.appendChild(show); b.appendChild(row);
+    function finishCase(ok, title){
+      if(settled) return; settled = true;
+      score(R.obj, ok, R.q+": "+cs.task, cs.why);
+      chk.disabled = true; show.classList.add("hide"); after && after(area);
+      feedback(ok, title, cs.why);
+      idx++;
+      const nx = $("#next");
+      if(idx<R.cases.length){ nx.textContent="Next challenge →"; nx.classList.remove("hide"); nx.onclick=()=>{ nx.classList.add("hide"); step(); }; nx.focus(); }
+      else showNext(R===ROUNDS[ROUNDS.length-1]);
+    }
+    chk.onclick = ()=>{
+      const r = check(area, cs);
+      if(r===null) return;
+      tries++;
+      if(r) finishCase(tries<=2, tries<=2 ? "Got it" : "Got it (counted as a miss: it took "+tries+" tries)");
+      else {
+        feedback(false, "Not yet — try "+(tries+1), (tries===1?"Hint: ":"")+cs.hint);
+        if(tries>=3) show.classList.remove("hide");
+      }
+    };
+    show.onclick = ()=>{ reveal(area, cs); finishCase(false, "Here's the answer"); };
+  }
+  step();
+}
+
+function drawSelLab(){
+  labFrame(L1,
+    (area, cs)=>{
+      const wrap = el("div","labgrid");
+      const src = el("pre","snip", esc(SBX_HTML)); src.setAttribute("aria-label","The HTML of Patch's mini page");
+      const right = el("div");
+      const sbx = el("div","sbx", SBX_HTML); sbx.setAttribute("aria-label","Preview of Patch's mini page. Matching elements are outlined in gold.");
+      const lab = el("label","", "Your selector"); lab.setAttribute("for","selIn");
+      const inp = el("input"); inp.type="text"; inp.id="selIn"; inp.autocomplete="off"; inp.spellcheck=false; inp.placeholder="type a selector, e.g. p";
+      inp.style.fontFamily="var(--fm)";
+      const live = el("p","note",""); live.setAttribute("aria-live","polite");
+      right.appendChild(lab); right.appendChild(inp); right.appendChild(live); right.appendChild(sbx);
+      wrap.appendChild(src); wrap.appendChild(right); area.appendChild(wrap);
+      const upd = ()=>{
+        sbx.querySelectorAll(".lit").forEach(x=>x.classList.remove("lit"));
+        const v = inp.value.trim(); if(!v){ live.textContent="Nothing typed yet."; return; }
+        try{ const m = sbx.querySelectorAll(v); m.forEach(x=>x.classList.add("lit")); live.textContent = m.length+" element"+(m.length===1?"":"s")+" match."; }
+        catch(e){ live.textContent="That isn't a valid selector yet. Keep typing."; }
+      };
+      inp.addEventListener("input", upd);
+      inp.addEventListener("keydown", e=>{ if(e.key==="Enter") area.parentNode.querySelector(".btn.primary").click(); });
+      area._inp = inp; area._sbx = sbx; area._upd = upd; upd(); setTimeout(()=>inp.focus(),50);
+    },
+    (area, cs)=>{
+      const v = area._inp.value.trim();
+      if(!v){ feedback(false,"Type a selector first","Type into the box, watch what lights up, then press Check."); return null; }
+      let got; try{ got = [...area._sbx.querySelectorAll(v)]; }catch(e){ feedback(false,"Not a valid selector","Check the spelling, the dots on class names, and the colons."); return null; }
+      const want = [...area._sbx.querySelectorAll(cs.want)];
+      return got.length===want.length && got.every(x=>want.includes(x));
+    },
+    (area, cs)=>{ area._inp.value = cs.want; area._upd(); },
+    (area)=>{ area._inp.disabled = true; }
+  );
+}
+
+const POS_OPTS = {card:["static","relative"], tag:["static","relative","absolute"], top:["auto","0px","10px","30px"], right:["auto","0px","10px","30px"], float:["none","left","right"], clear:["none","left","right","both"]};
+const POS_LABEL = {card:".card { position }", tag:".tag { position }", top:".tag { top }", right:".tag { right }", float:".photo { float }", clear:"footer { clear }"};
+function drawPosLab(){
+  labFrame(L2,
+    (area, cs)=>{
+      const wrap = el("div","labgrid");
+      const ctl = el("div","ctl");
+      const st = {card:"static",tag:"static",top:"auto",right:"auto",float:"none",clear:"none"};
+      const stage = el("div","stage",
+        '<div class="mcard"><b>Oat Latte</b><br>Double espresso and steamed oat milk. <span class="mtag">$4</span> Served all day.</div>'
+       +'<div class="mphoto" role="img" aria-label="Photo of a latte">photo</div>'
+       +'<p>Patch opened the caf&eacute; in an old bike shop with one espresso machine and three tables.</p>'
+       +'<p>Every drink is pulled by hand.</p>'
+       +'<div class="mfoot">footer</div>');
+      const apply = ()=>{
+        const c = stage.querySelector(".mcard"), t = stage.querySelector(".mtag"), ph = stage.querySelector(".mphoto"), f = stage.querySelector(".mfoot");
+        c.style.position = st.card; t.style.position = st.tag; t.style.top = st.top; t.style.right = st.right;
+        ph.style.float = st.float; f.style.clear = st.clear;
+        css.textContent = ".card  { position: "+st.card+"; }\n.tag   { position: "+st.tag+"; top: "+st.top+"; right: "+st.right+"; }\n.photo { float: "+st.float+"; }\nfooter { clear: "+st.clear+"; }";
+      };
+      Object.keys(POS_OPTS).forEach(k=>{
+        const id = "pl-"+k;
+        const lab = el("label","", "<code>"+esc(POS_LABEL[k])+"</code>"); lab.setAttribute("for",id);
+        const s = el("select"); s.id = id;
+        POS_OPTS[k].forEach(v=>{ const o = el("option","",v); o.value=v; s.appendChild(o); });
+        s.value = st[k]; s.onchange = ()=>{ st[k]=s.value; apply(); };
+        const g = el("div","cg"); g.appendChild(lab); g.appendChild(s); ctl.appendChild(g);
+      });
+      const css = el("pre","snip",""); css.setAttribute("aria-live","polite"); css.setAttribute("aria-label","The CSS your settings produce");
+      const left = el("div"); left.appendChild(ctl); left.appendChild(css);
+      wrap.appendChild(left); wrap.appendChild(stage); area.appendChild(wrap);
+      area._st = st; area._apply = apply; area._ctl = ctl; apply();
+    },
+    (area, cs)=> cs.ok(area._st),
+    (area, cs)=>{
+      const answers = [{card:"relative",tag:"absolute",top:"10px",right:"10px"},{card:"static",tag:"absolute",top:"0px",right:"0px"},{tag:"relative",top:"10px",right:"auto"},{float:"right",clear:"both"}];
+      const a = answers[L2.cases.indexOf(cs)];
+      Object.assign(area._st, a); Object.keys(a).forEach(k=>{ area._ctl.querySelector("#pl-"+k).value = a[k]; }); area._apply();
+    },
+    (area)=>{ area._ctl.querySelectorAll("select").forEach(s=>s.disabled=true); }
+  );
+}
+
+const ROUNDS = [R1,R2,R3,R4,L1,R5,L2,R6,R7];
+let ri = 0, student = "", misses = [], streak = 0, best = 0;
+let tally = {A:{c:0,t:0},B:{c:0,t:0},C:{c:0,t:0},D:{c:0,t:0}};
+
+const $ = s => document.querySelector(s);
+const el = (t,c,h) => { const e=document.createElement(t); if(c)e.className=c; if(h!==undefined)e.innerHTML=h; return e; };
+const esc = s => String(s).replace(/[&<>"]/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[m]));
+
+function score(obj, right, label, why){
+  tally[obj].t++; if(right) tally[obj].c++;
+  if(right){ streak++; if(streak>best) best=streak; } else streak = 0;
+  $("#streak").textContent = "Streak: "+streak+(streak>=5?" ★":"");
+  if(!right) misses.push({label, why});
+}
+function progress(){
+  const total = ROUNDS.length, done = ri;
+  $("#pbar").style.width = (done/total*100)+"%";
+  $("#pwrap").setAttribute("aria-valuenow", done);
+  $("#pct").textContent = done>=total?"Complete":"Round "+(done+1)+" of "+total;
+}
+function feedback(good, title, body){
+  const f = $("#fb"); f.innerHTML="";
+  f.appendChild(el("div","fb "+(good?"good":"bad"),"<b>"+esc(title)+"</b>"+esc(body)));
+}
+function clearFb(){ $("#fb").innerHTML=""; }
+function showNext(last){
+  const b = $("#next"); b.classList.remove("hide");
+  b.textContent = last ? "See my results →" : "Next round →";
+  b.onclick = advance;
+  b.focus();
+}
+
+/* ------------------------------------------------------------------ round 1: sort into three bins */
+function drawR1(){
+  const b = $("#rbody"); b.innerHTML="";
+  let sel = null, done = 0;
+  const items = el("div","items");
+  R1.items.forEach((it,i)=>{
+    const c = el("button","chip", it[3] ? "<code>"+esc(it[0])+"</code>" : esc(it[0]));
+    c.setAttribute("aria-pressed","false");
+    c.onclick = ()=>{ if(c.classList.contains("done"))return;
+      items.querySelectorAll(".chip").forEach(x=>{x.classList.remove("active");x.setAttribute("aria-pressed","false");});
+      c.classList.add("active"); c.setAttribute("aria-pressed","true"); sel = {i,c}; clearFb(); };
+    items.appendChild(c);
+  });
+  b.appendChild(items);
+  const bins = el("div","bins");
+  R1.bins.forEach(k=>{
+    const d = el("button","bin "+k[0], "<h3>"+k[1]+"</h3><p>"+esc(k[2])+"</p>");
+    d.setAttribute("aria-label","Put the selected item in the "+k[1].toLowerCase()+" bin");
+    const list = el("div","binlist"); d.appendChild(list);
+    d.onclick = ()=>{
+      if(!sel){ feedback(false,"Pick an item first","Click one of the items above, then click a bin."); return; }
+      const it = R1.items[sel.i], right = it[1]===k[0];
+      score(R1.obj, right, "Sort: "+it[0], it[2]);
+      list.appendChild(el("span", right?"ok":"no", (right?"✓ ":"✗ ")+esc(it[0].length>34?it[0].slice(0,32)+"…":it[0])));
+      sel.c.classList.add("done", right?"right":"wrong"); sel.c.classList.remove("active"); sel.c.disabled = true;
+      feedback(right, right?"Correct":"Not quite. It's "+R1.names[it[1]], it[2]);
+      sel=null; done++;
+      if(done===R1.items.length) showNext(false);
+    };
+    bins.appendChild(d);
+  });
+  b.appendChild(bins);
+}
+
+/* ------------------------------------------------------------------ round 2: box model diagram */
+function boxHTML(){
+  const bd = (n,c) => '<button class="badge '+(c||'')+'" data-n="'+n+'" aria-label="Part '+n+'">'+n+'</button>';
+  return '<div role="group" aria-label="A box model diagram with four nested layers numbered 1 to 4 from the outside in, and a padding shorthand line with two numbered values, 5 and 6.">'
+   + '<div class="bm">'+bd(1,'b1')
+   +   '<div class="bm-b">'+bd(2,'b2')
+   +     '<div class="bm-p">'+bd(3,'b3')
+   +       '<div class="bm-c">'+bd(4,'b4')+'Patch\'s Caf&eacute;<br><span style="color:var(--mute);font-size:15px">Today\'s special: oat latte</span></div>'
+   +     '</div></div></div>'
+   + '<div class="short"><span class="prop">padding</span>: <span class="val">5px 10px</span> '+bd(5)+'<span class="val">15px</span> '+bd(6)+'<span class="val">20px</span>;</div>'
+   + '</div>'
+   + '<p class="note">Badges 1&ndash;4 sit on the layers of the box, from the outside in. Badges 5 and 6 sit just before a value in the shorthand line.</p>';
+}
+function drawR2(){
+  const b = $("#rbody"); b.innerHTML="";
+  const wrap = el("div","diagwrap");
+  const left = el("div","", boxHTML());
+  const right = el("div");
+  const prompt = el("p","", "Click a numbered badge.");
+  prompt.style.cssText="color:var(--dim);margin-bottom:12px";
+  const opts = el("div","opts");
+  right.appendChild(prompt); right.appendChild(opts);
+  wrap.appendChild(left); wrap.appendChild(right); b.appendChild(wrap);
+
+  let current = null, done = 0;
+  const badges = left.querySelectorAll(".badge");
+  function pick(g){
+    if(g.classList.contains("done")) return;
+    badges.forEach(x=>x.classList.remove("on"));
+    g.classList.add("on"); current = +g.dataset.n; clearFb();
+    prompt.textContent = "Part "+current+" is…";
+    opts.innerHTML="";
+    R2.pool.forEach(name=>{
+      const o = el("button","opt","<b>"+esc(name)+"</b>");
+      o.onclick = ()=>{
+        const part = R2.parts.find(p=>p.n===current);
+        const ok = part.name===name;
+        score(R2.obj, ok, "Box model: part "+current, part.name+": "+part.why);
+        o.classList.add(ok?"right":"wrong");
+        opts.querySelectorAll(".opt").forEach(x=>x.disabled=true);
+        g.classList.remove("on"); g.classList.add("done"); g.setAttribute("aria-label","Part "+current+", done");
+        feedback(ok, ok?"Correct: "+part.name : "That one is "+part.name.charAt(0).toLowerCase()+part.name.slice(1), part.why);
+        done++;
+        if(done===R2.parts.length) showNext(false);
+        else { prompt.textContent="Click another numbered badge."; setTimeout(()=>{opts.innerHTML="";},1200); }
+      };
+      opts.appendChild(o);
+    });
+    opts.querySelector(".opt").focus();
+  }
+  badges.forEach(g=>{ g.onclick=()=>pick(g); });
+}
+
+/* ------------------------------------------------------------------ round 3: match */
+function drawR3(){
+  const b = $("#rbody"); b.innerHTML="";
+  let sel=null, done=0;
+  const terms = el("div","items");
+  R3.pairs.forEach((p,i)=>{
+    const c = el("button","chip","<code>"+esc(p[0])+"</code>");
+    c.setAttribute("aria-pressed","false");
+    c.onclick = ()=>{ if(c.classList.contains("done"))return;
+      terms.querySelectorAll(".chip").forEach(x=>{x.classList.remove("active");x.setAttribute("aria-pressed","false");});
+      c.classList.add("active"); c.setAttribute("aria-pressed","true"); sel={i,c}; clearFb(); };
+    terms.appendChild(c);
+  });
+  b.appendChild(terms);
+  const opts = el("div","opts");
+  const shuffled = R3.pairs.map((p,i)=>({d:p[1],i})).sort(()=>Math.random()-0.5);
+  shuffled.forEach(s=>{
+    const o = el("button","opt", esc(s.d));
+    o.onclick = ()=>{
+      if(!sel){ feedback(false,"Pick a term first","Click one of the terms above, then click its definition."); return; }
+      const ok = sel.i===s.i, p = R3.pairs[sel.i];
+      score(R3.obj, ok, "Definition of "+p[0], p[1]+". "+p[2]);
+      sel.c.classList.add("done", ok?"right":"wrong"); sel.c.classList.remove("active"); sel.c.disabled = true;
+      if(ok){ o.classList.add("right"); o.disabled = true; }
+      else { o.classList.add("wrong"); setTimeout(()=>o.classList.remove("wrong"),1400); }
+      feedback(ok, ok?"Correct: "+p[0] : "That's the definition of "+R3.pairs[s.i][0], p[0]+": "+p[1]+". "+p[2]);
+      sel=null; done++;
+      if(done===R3.pairs.length) showNext(false);
+    };
+    opts.appendChild(o);
+  });
+  b.appendChild(opts);
+}
+
+/* ------------------------------------------------------------------ rounds 4-7: multiple choice */
+function drawChoice(R, obj){
+  const b = $("#rbody"); b.innerHTML="";
+  let idx = 0;
+  function step(){
+    b.innerHTML=""; clearFb();
+    const cs = R.cases[idx];
+    const count = el("p","note","Question "+(idx+1)+" of "+R.cases.length);
+    count.style.margin="0 0 8px";
+    b.appendChild(count);
+    const q = el("p","", esc(cs.q));
+    q.style.cssText="font-size:20px;margin-bottom:16px;color:var(--txt)";
+    b.appendChild(q);
+    if(cs.code){ const pre = el("pre","snip", esc(cs.code)); pre.setAttribute("aria-label","Code for this question"); b.appendChild(pre); }
+    const g = el("div","opts");
+    cs.opts.forEach(o=>{
+      const btn = el("button","opt", "<code style=\"color:inherit\">"+esc(o[0])+"</code>");
+      btn.onclick = ()=>{
+        const ok = !!o[1];
+        score(obj, ok, cs.q, cs.why);
+        g.querySelectorAll(".opt").forEach(x=>x.disabled=true);
+        btn.classList.add(ok?"right":"wrong");
+        if(!ok){ [...g.querySelectorAll(".opt")][cs.opts.findIndex(z=>z[1])].classList.add("right"); }
+        feedback(ok, ok?"Correct":"The better answer is marked correct", cs.why);
+        idx++;
+        const nx = $("#next");
+        if(idx<R.cases.length){ nx.textContent="Next question →"; nx.classList.remove("hide"); nx.onclick=()=>{ nx.classList.add("hide"); step(); }; nx.focus(); }
+        else { showNext(R===ROUNDS[ROUNDS.length-1]); }
+      };
+      g.appendChild(btn);
+    });
+    b.appendChild(g);
+  }
+  step();
+}
+
+/* ------------------------------------------------------------------ flow */
+function renderRound(){
+  const R = ROUNDS[ri];
+  $("#rk").textContent = "Round "+(ri+1)+" of "+ROUNDS.length+(R.lab?" · Learn by doing":"");
+  $("#rq").textContent = R.q;
+  $("#rs").textContent = R.sub;
+  clearFb(); $("#next").classList.add("hide"); $("#next").onclick = advance;
+  if(R===L1) drawSelLab();
+  else if(R===L2) drawPosLab();
+  else if(R===R1) drawR1();
+  else if(R===R2) drawR2();
+  else if(R===R3) drawR3();
+  else drawChoice(R, R.obj);
+  progress();
+  window.scrollTo({top:0,behavior:"smooth"});
+  $("#rq").focus({preventScroll:true});
+}
+function advance(){ ri++; if(ri<ROUNDS.length) renderRound(); else finish(); }
+function finish(){
+  progress();
+  $("#round").classList.add("hide");
+  $("#done").classList.remove("hide");
+  const c = Object.values(tally).reduce((a,o)=>a+o.c,0);
+  const t = Object.values(tally).reduce((a,o)=>a+o.t,0);
+  const pct = Math.round(c/t*100);
+  $("#dScore").textContent = pct+"%";
+  $("#dSub").textContent = (student ? student+" | " : "")+c+" of "+t+" correct | best streak "+best;
+  $("#dTitle").textContent = pct>=90?"Patch's Café is fixed.":pct>=75?"Solid work.":pct>=60?"Good start.":"Worth another run.";
+  $("#dMsg").textContent = pct>=90 ? "You can target exactly the element you want, read the box model, position anything and predict which rule wins. That's Chapter 9."
+    : pct>=75 ? "Strong overall. Read the items below, then you'll have all four objectives covered."
+    : pct>=60 ? "The foundations are there. Re-read the Chapter 9 sections named in the items below and run this again."
+    : "Go back through Chapter 9 with the items below as your reading list, then try again. Every explanation names the section to re-read.";
+  const sc = $("#dScores"); sc.innerHTML="";
+  Object.keys(OBJ).forEach(k=>{
+    const o = tally[k], p = o.t? Math.round(o.c/o.t*100):0;
+    const col = p>=80?"var(--ok)":p>=60?"var(--warn)":"var(--bad)";
+    const word = p>=80?"strong":p>=60?"getting there":"review this";
+    sc.appendChild(el("div","sc",'<div class="n" style="color:'+col+'">'+p+'%</div><div class="l">'+esc(OBJ[k])+'<br><span style="color:var(--mute)">'+o.c+" of "+o.t+" · "+word+'</span></div>'));
+  });
+  const m = $("#dMiss"); m.innerHTML="";
+  if(!misses.length) m.appendChild(el("p","", '<span style="color:var(--ok)">Nothing missed. Every answer was correct.</span>'));
+  else misses.forEach(x=> m.appendChild(el("div","miss","<b>"+esc(x.label)+"</b>"+esc(x.why))));
+
+  const stamp = new Date().toLocaleString();
+  let out = "PATCH'S CHAPTER 9 CHECK — COMPLETION SUMMARY\n";
+  out += "=============================================\n";
+  out += "Name: "+(student||"(not entered)")+"\n";
+  out += "Completed: "+stamp+"\n";
+  out += "Overall score: "+c+" / "+t+"  ("+pct+"%)\n";
+  out += "Best streak: "+best+"\n\n";
+  out += "BY LEARNING OBJECTIVE\n";
+  Object.keys(OBJ).forEach(k=>{ const o=tally[k]; out += "  "+OBJ[k]+": "+o.c+" / "+o.t+"\n"; });
+  out += "\nITEMS I MISSED ("+misses.length+")\n";
+  if(!misses.length) out += "  none\n";
+  else misses.forEach((x,i)=>{ out += "  "+(i+1)+". "+x.label+"\n     -> "+x.why+"\n"; });
+  out += "\nREFLECTION — answer these in your own words before submitting:\n";
+  out += "  1. Which objective did you score lowest on? Name the Chapter 9 section you re-read for it.\n     \n";
+  out += "  2. In your own words, what is the difference between h2 + p and h2 ~ p?\n     \n";
+  out += "  3. Why do you put position: relative on a card before you put position: absolute\n     on the price tag inside it?\n     \n";
+  out += "\nVerification code: "+code(c,t,student)+"\n";
+  $("#dOut").value = out;
+  window.scrollTo({top:0,behavior:"smooth"});
+  $("#dTitle").focus({preventScroll:true});
+}
+function code(c,t,n){
+  let h=0; const s = n+"|"+c+"|"+t+"|"+new Date().toDateString();
+  for(let i=0;i<s.length;i++){ h=(h*31+s.charCodeAt(i))>>>0; }
+  return "CH9-"+c+t+"-"+h.toString(36).toUpperCase().slice(0,6);
+}
+
+/* ------------------------------------------------------------------ init */
+$("#go").onclick = ()=>{
+  student = $("#nm").value.trim();
+  $("#start").classList.add("hide");
+  $("#round").classList.remove("hide");
+  renderRound();
+};
+$("#nm").addEventListener("keydown", e=>{ if(e.key==="Enter") $("#go").click(); });
+$("#copy").onclick = ()=>{
+  const ta = $("#dOut");
+  const done = ()=>{ $("#copy").textContent="Copied ✓"; setTimeout(()=>$("#copy").textContent="Copy summary",1800); };
+  if(navigator.clipboard && window.isSecureContext){ navigator.clipboard.writeText(ta.value).then(done).catch(fallback); }
+  else fallback();
+  function fallback(){ ta.select(); ta.setSelectionRange(0,999999);
+    try{ document.execCommand("copy"); done(); } catch(e){ $("#copy").textContent="Select the text and press Ctrl+C"; } }
+};
+$("#again").onclick = ()=>{ location.reload(); };
+progress(); $("#pct").textContent = "Not started";
+</script>
+</body>
+</html>
