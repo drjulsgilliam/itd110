@@ -167,7 +167,7 @@ select:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
 <header class="noprint">
   <div class="bar">
     <div class="brand">PATCH<span>'S</span> CHAPTER 9 CHECK</div>
-    <div class="prog" role="progressbar" aria-label="Progress" aria-valuemin="0" aria-valuemax="9" aria-valuenow="0" id="pwrap"><i id="pbar"></i></div>
+    <div class="prog" role="progressbar" aria-label="Progress" aria-valuemin="0" aria-valuemax="7" aria-valuenow="0" id="pwrap"><i id="pbar"></i></div>
     <div class="streak" id="streak" aria-live="off">Streak: 0</div>
     <div class="pct" id="pct">Not started</div>
   </div>
@@ -178,7 +178,7 @@ select:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
 <section id="start" class="card panel">
   <div class="kicker">ITD 110 &middot; Chapter 9 &middot; Interactive assignment</div>
   <h1 class="q">Patch's Chapter 9 Check</h1>
-  <p class="sub">Patch's Caf&eacute; website is a mess. Nine rounds to fix it, including two hands-on labs where you type selectors and move elements yourself. About 30 minutes. Every answer comes with an explanation and the Chapter 9 section to re-read.</p>
+  <p class="sub">Patch's Caf&eacute; website is a mess. Seven quick rounds to fix it. About 15 minutes. Every answer comes with an explanation and the Chapter 9 section to re-read.</p>
   <p style="color:var(--dim)">Read Chapter 9 first if you can. If you haven't, this teaches you as you go: every answer explains the idea and names the section to read. It covers the four things the chapter teaches:</p>
   <ul class="plain">
     <li>Target exactly the right element with pseudo-classes, combinators and pseudo-elements</li>
@@ -217,7 +217,7 @@ select:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
   <h3 style="font-size:22px;margin-top:26px">Worth another look</h3>
   <div id="dMiss"></div>
   <h3 style="font-size:22px;margin-top:30px">Turn this in</h3>
-  <p style="color:var(--dim);margin-bottom:12px">Answer the three reflection questions inside the box, then copy everything and paste it into the Canvas assignment, or use Print to save it as a PDF.</p>
+  <p style="color:var(--dim);margin-bottom:12px">Answer the one reflection question inside the box, then copy everything and paste it into the Canvas assignment, or use Print to save it as a PDF.</p>
   <label for="dOut" class="sr">Completion summary</label>
   <textarea id="dOut" style="min-height:340px"></textarea>
   <div class="row noprint">
@@ -254,12 +254,6 @@ const R1 = {
     ["a:hover","pc","Pseudo-class. :hover is a STATE: the element only matches while the pointer is over it. (Table 9-1)",1],
     ["h1 + p","cb","Combinator. The + is the adjacent sibling selector: the p that comes immediately after an h1. (Table 9-2)",1],
     ["::selection","pe","Pseudo-element. ::selection styles the part of the page the visitor has highlighted by dragging. (Table 9-3)",1],
-    ["Picks every second list item so the menu gets zebra stripes","pc","Pseudo-class. li:nth-child(2n) picks items by their position: 2, 4, 6 and so on. (“Apply Contextual Formatting with Pseudo-Classes”)",0],
-    ["Adds a decorative line after every h2 without adding any HTML","pe","Pseudo-element. h2::after with content: \"\"; draws decoration after the element. The chapter says to use pseudo-elements for decoration, not real content. (“Apply CSS to Pseudo-Elements”)",0],
-    ["Selects every p that comes after an h2 in the same parent, not just the first one","cb","Combinator. The ~ is the general sibling selector: every following sibling, near or far. (Table 9-2)",0],
-    ["The plain space in  ul li","cb","Combinator. A space is the descendant selector: li anywhere inside a ul, children, grandchildren and deeper. (Table 9-2)",0],
-    ["Styles only the first line of each paragraph, however wide the window is","pe","Pseudo-element. ::first-line follows the line as the window resizes, so you can't do this with a span. (Table 9-3)",0],
-    ["Matches a form field only while the visitor is typing in it","pc","Pseudo-class. :focus is a state. The element matches only while it has keyboard focus. (Table 9-1)",0]
   ]
 };
 
@@ -287,17 +281,15 @@ const R3 = {
     ["position: relative","Moves an element from its normal spot, but its original space stays reserved","Other elements do not slide into the gap, so big moves leave holes. Use it for small nudges, and to make a parent a positioned ancestor. (“Understanding CSS Positioning Essentials”: Relative Positioning)"],
     ["position: absolute","Places an element measured from its nearest positioned ancestor","If no ancestor is positioned, it is measured from the initial containing block, which means the whole page. (“Understanding CSS Positioning Essentials”: Absolute Positioning)"],
     ["position: fixed","Keeps an element in the same spot in the viewport even while the page scrolls","Use it for things that must always be visible, like a back-to-top button. (“Fix an Element in Place in the Viewport”)"],
-    ["Nearest positioned ancestor","The closest parent or grandparent whose position is anything other than static","That is why you put position: relative; on a card before you absolutely position its price tag."],
-    ["Initial containing block","The box that holds all of the web page's content","An absolute element with no positioned ancestor is measured from here."],
     ["float: right","Moves an element to the right edge and lets text wrap around its left side","float takes left, right or inherit. There is no float: center. (“Float an Element Beside Another Element”)"],
-    ["clear: both","Moves an element down below floated elements on either side","clear takes left, right, both, inherit or none. none is the default, so you never need to type it."]
+    ["clear: both","Moves an element down below floated elements on either side","clear takes left, right, both, inherit or none. none is the default, so you never need to type it."],
   ]
 };
 
 /* Round 4: which selector? */
 const R4 = {
   obj:"A", q:"Which selector would you write?",
-  sub:"Seven jobs on Patch's menu page. Pick the selector that targets exactly what is asked, no more and no less.",
+  sub:"Four jobs on Patch's menu page. Pick the selector that targets exactly what is asked, no more and no less.",
   cases:[
     {q:"Bold only the FIRST item in each unordered list on the menu.",
      opts:[["ul li:first-child",1],["ul:first-child li",0],["ul li::first",0],["ul + li",0]],
@@ -311,15 +303,6 @@ const R4 = {
     {q:"Give EVERY paragraph that follows an h2 (in the same parent) a left indent, not just the first one.",
      opts:[["h2 + p",0],["h2 ~ p",1],["h2 p",0],["h2 > p",0]],
      why:"~ is the general sibling selector: all following siblings. + stops at the one paragraph right after the h2. h2 p and h2 > p look for paragraphs INSIDE the h2, and there are none. Table 9-2."},
-    {q:"Make a drop cap: the first letter of each paragraph in the article is 3em tall.",
-     opts:[["article p:first-child",0],["article p::first-letter",1],["article::first-letter p",0],["article p::first-char",0]],
-     why:"::first-letter is the pseudo-element for this. It goes at the END of the selector, after the element it belongs to. ::first-char isn't real, and :first-child would style the whole first paragraph. Table 9-3."},
-    {q:"Patch wrote  h2::after { border-bottom: 3px solid; }  and no line appears. What is missing?",
-     opts:[["display: flex;",0],["content: \"\";",1],["position: fixed;",0],["!important",0]],
-     why:"::after (and ::before) only render when they have a content property, even an empty one. The chapter's own example starts with content: \"\";. Re-read “Apply CSS to Pseudo-Elements.”"},
-    {q:"Change the highlight color when a visitor drags to select text on the page.",
-     opts:[[":hover",0],["::selection",1],[":focus",0],["::first-line",0]],
-     why:"::selection styles the part of the page the visitor has selected. It is one of the five pseudo-elements the chapter says every current browser supports."}
   ]
 };
 
@@ -332,18 +315,10 @@ const R5 = {
      code:".box {\n  position: relative;\n  top: 30px;\n  left: 20px;\n}",
      opts:[["30px down and 20px to the RIGHT; its old space stays empty",1],["30px up and 20px to the left",0],["To the top-left corner of the page",0],["Nowhere. top and left need position: absolute",0]],
      why:"top: 30px means 30px away from where its top edge was, so it moves DOWN. left: 20px pushes it away from its left edge, so it moves RIGHT. The browser keeps its old space reserved. (“Understanding CSS Positioning Essentials”: Relative Positioning)"},
-    {q:"No element on the page has a position set. Where does .upright go?",
-     code:".upright {\n  position: absolute;\n  top: 0;\n  right: 0;\n}",
-     opts:[["The upper-right corner of the initial containing block (the page)",1],["The upper-right corner of its parent",0],["It stays where it is",0],["The upper-right of the window, even while scrolling",0]],
-     why:"With no positioned ancestor, absolute is measured from the initial containing block. Staying put while scrolling would be fixed, not absolute. (“Understanding CSS Positioning Essentials”: Absolute Positioning)"},
     {q:"Patch's price tag sits inside a menu card. Where does the tag go?",
      code:".card { position: relative; }\n.tag  { position: absolute; top: 10px; right: 10px; }\n\n<div class=\"card\"> ... <span class=\"tag\">$4</span> </div>",
      opts:[["10px in from the top-right corner of the CARD",1],["10px in from the top-right corner of the page",0],["10px down and 10px left of where the span was",0],["It disappears",0]],
      why:"The card has position: relative, so it is the tag's nearest positioned ancestor. This pair, relative parent and absolute child, is the most useful positioning pattern you will write."},
-    {q:"Same tag, but someone deleted  .card { position: relative; }  What happens?",
-     code:".tag { position: absolute; top: 10px; right: 10px; }",
-     opts:[["Every tag jumps to the top-right of the page and they stack on top of each other",1],["Nothing changes",0],["The tags line up in a row",0],["The tags become fixed",0]],
-     why:"Without a positioned ancestor, every tag is measured from the initial containing block, so they all land in the same corner. When an absolute element flies away, check that its parent is positioned."},
     {q:"The visitor scrolls down a long menu. Where is the .keep button?",
      code:".keep {\n  position: fixed;\n  left: 0;\n  bottom: 0;\n  padding: 10px;\n}",
      opts:[["Still in the lower-left corner of the window",1],["At the bottom of the page; you scroll down to reach it",0],["Back at the top of the page",0],["Wherever it was in the HTML",0]],
@@ -352,13 +327,6 @@ const R5 = {
      code:"img.dish { float: right; }\n\n<img class=\"dish\" src=\"latte.jpg\" alt=\"Latte\">\n<p>Our latte is made with...</p>",
      opts:[["The photo moves to the right and the text wraps down its left side",1],["The photo moves right and the text starts below it",0],["The photo is centered",0],["The text floats right too",0]],
      why:"A floated element moves to one side and the following content wraps around it. To stop the wrap, put clear on the element that should start below. (“Float an Element Beside Another Element”)"},
-    {q:"Patch's footer is creeping up beside a floated sidebar. Which declaration on the footer fixes it?",
-     opts:[["clear: both;",1],["float: none;",0],["position: static;",0],["display: inline;",0]],
-     why:"clear: both moves the footer below floats on either side. float: none on the footer doesn't help: the footer isn't the one floating."},
-    {q:"What happens to this heading?",
-     code:"h1 {\n  position: static;\n  top: 50px;\n}",
-     opts:[["Nothing moves. top is ignored on a static element",1],["It moves 50px down",0],["It moves 50px up",0],["It goes 50px from the top of the page",0]],
-     why:"static is the default and means “normal flow.” top, right, bottom and left only work once position is relative, absolute or fixed."}
   ]
 };
 
@@ -382,15 +350,6 @@ const R6 = {
     {q:"The root font size is 16px. How big is 1.5rem?",
      opts:[["16px",0],["24px",1],["1.5px",0],["150% of the parent",0]],
      why:"rem is relative to the ROOT (html) font size: 1.5 × 16 = 24px. em is relative to the CURRENT element's font size instead. Table 9-4."},
-    {q:"Patch's hero banner has  height: 50vh;  What does that mean?",
-     opts:[["Half the height of the viewport",1],["50 pixels",0],["Half the height of the parent",0],["50% of the page's total length",0]],
-     why:"vh is 1/100 of the viewport height, so 50vh is half the visible window. % is relative to the parent instead. Table 9-4."},
-    {q:"The menu text gets too long to read on a wide monitor. What keeps it readable but still shrinks on a phone?",
-     opts:[["max-width: 600px;",1],["width: 600px;",0],["min-width: 600px;",0],["height: 600px;",0]],
-     why:"max-width caps the width but still lets the box get narrower. A fixed width: 600px would overflow a phone. min-width does the opposite: it stops the box from getting narrower. (“Specify Maximum or Minimum Width or Height for an Element”)"},
-    {q:"Patch wants the coupon card to overlap the card above it. Which declaration on the coupon does that?",
-     opts:[["margin-top: -20px;",1],["padding-top: -20px;",0],["margin-top: 20px;",0],["border-top: -20px;",0]],
-     why:"A negative margin pulls the element toward its neighbor, so it overlaps. Padding can't be negative. Check the result afterward. (“Set Margins to Control Element Spacing”)"}
   ]
 };
 
@@ -402,26 +361,13 @@ const R7 = {
     {q:"Patch wants to hide the “Sold out” banner completely so it takes up no space. Which rule goes in .hide?",
      opts:[["display: none;",1],["display: hidden;",0],["position: static;",0],["float: none;",0]],
      why:"display: none removes the element from the page entirely. hidden is not a display value. Table 9-5 and “Control the Display of an Element,” where the chapter builds this exact .hide class."},
-    {q:"A <span class=\"force-block\"> has  display: block;  What changes?",
-     opts:[["It takes the full width and pushes what comes next onto a new line",1],["Nothing. A span is always inline",0],["It disappears",0],["It floats left",0]],
-     why:"block makes an element take the full width available and start a new line, even if it is normally inline. The chapter's .force-block example in “Control the Display of an Element” does exactly this."},
     {q:"You need badges that sit side by side on one line, but you also need to set their width and height. Which display value?",
      opts:[["inline",0],["inline-block",1],["block",0],["none",0]],
      why:"inline-block stays on the line like inline, but lets you set width and height. Plain inline ignores width and height. Table 9-5."},
-    {q:"Center Patch's logo both across and down inside the header. Which pair goes on the header after display: flex?",
-     opts:[["justify-content: center;  align-items: center;",1],["text-align: center;  float: center;",0],["align-content: middle;  justify-items: middle;",0],["position: center;  top: 50%;",0]],
-     why:"justify-content aligns flex items along the main axis; align-items aligns them along the cross axis. Together they center both ways. Table 9-6, “Create a Flexbox Layout.”"},
     {q:"What color AND weight are the definition terms?",
      code:"dt {\n  color: red !important;\n  font-weight: 900;\n}\ndt {\n  color: blue;\n  font-weight: 400;\n}",
      opts:[["red, weight 400",1],["blue, weight 400",0],["red, weight 900",0],["blue, weight 900",0]],
      why:"!important only protects the ONE declaration it is on. color stays red; font-weight follows the normal rule, last one wins, so 400. This is the chapter's exact example. (“Override CSS by Using the !important Declaration”)"},
-    {q:"Same style sheet, two definitions, no !important. Which one does the browser use?",
-     code:"p { color: green; }\n/* ...forty lines later... */\np { color: purple; }",
-     opts:[["purple, the one it reads last",1],["green, the one it reads first",0],["A mix of both",0],["Neither; it's an error",0]],
-     why:"The browser reads the style sheet top to bottom and applies the last definition it meets. When a style you wrote “does nothing,” look further down the file."},
-    {q:"Patch is quoting a food critic. Which HTML gives the quote MEANING, not just an indent?",
-     opts:[["<blockquote> … <cite>The Daily Bite</cite></blockquote>",1],["<p style=\"margin-left:40px\"> …</p>",0],["<div class=\"indent\"> …</div>",0],["<q-block> …</q-block>",0]],
-     why:"blockquote tells search engines and screen readers that this is a quotation, and cite marks the source. Then you style both with CSS. (“Create Block Quotes”)"}
   ]
 };
 
@@ -594,7 +540,7 @@ function drawPosLab(){
   );
 }
 
-const ROUNDS = [R1,R2,R3,R4,L1,R5,L2,R6,R7];
+const ROUNDS = [R1,R2,R3,R4,R5,R6,R7];
 let ri = 0, student = "", misses = [], streak = 0, best = 0;
 let tally = {A:{c:0,t:0},B:{c:0,t:0},C:{c:0,t:0},D:{c:0,t:0}};
 
@@ -838,10 +784,8 @@ function finish(){
   out += "\nITEMS I MISSED ("+misses.length+")\n";
   if(!misses.length) out += "  none\n";
   else misses.forEach((x,i)=>{ out += "  "+(i+1)+". "+x.label+"\n     -> "+x.why+"\n"; });
-  out += "\nREFLECTION — answer these in your own words before submitting:\n";
-  out += "  1. Which objective did you score lowest on? Name the Chapter 9 section you re-read for it.\n     \n";
-  out += "  2. In your own words, what is the difference between h2 + p and h2 ~ p?\n     \n";
-  out += "  3. Why do you put position: relative on a card before you put position: absolute\n     on the price tag inside it?\n     \n";
+  out += "\nREFLECTION — answer in your own words before submitting:\n";
+  out += "  Pick one term from this check that was new to you. What does it mean?\n     \n";
   out += "\nVerification code: "+code(c,t,student)+"\n";
   $("#dOut").value = out;
   window.scrollTo({top:0,behavior:"smooth"});
