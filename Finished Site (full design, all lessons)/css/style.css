@@ -1,0 +1,1001 @@
+/* =========================================================
+   WEB CSS DESIGN TEMPLATE: Design System Starter
+   ITD 110
+
+   This ONE external stylesheet (css/style.css) is organized
+   like a design system.
+   Order matters because of the cascade:
+
+   1. TOKENS      design decisions (change these first!)
+   2. BASE        reset + global defaults
+   3. LAYOUT      reusable layout primitives
+   4. COMPONENTS  buttons, cards, header, footer
+   5. SECTIONS    story-specific styling
+   6. MOTION      the "dynamic" layer
+   ========================================================= */
+
+
+/* =========================================================
+   1. TOKENS: design decisions
+   Colors use two steps: PALETTE (what the color is)
+   and ROLES (what job it does). Use role names in your CSS.
+   Try it: change --color-accent to var(--purple) and
+   watch the whole site update.
+   ========================================================= */
+:root {
+  /* ---------- COLOR STEP 1: THE PALETTE ----------
+     An Apple-inspired palette: lots of white and soft gray,
+     near-black text, and bright "system" colors as accents.
+     These are the ONLY places a color value is typed. */
+  --white:        #ffffff;
+  --silver:       #f5f5f7;   /* soft gray section background */
+  --graphite:     #1d1d1f;   /* near-black text */
+  --gray:         #6e6e73;   /* secondary text */
+  --black:        #000000;   /* dark sections */
+  --blue:         #0071e3;   /* main accent: links + buttons */
+  --blue-bright:  #2997ff;   /* accent on dark backgrounds */
+  --purple:       #bf5af2;   /* system purple */
+  --pink:         #ff375f;   /* system pink */
+  --orange:       #ff9f0a;   /* system orange */
+  --teal:         #64d2ff;   /* system teal */
+  --green:        #30d158;   /* system green */
+  --mint:         #63e6e2;   /* system mint */
+  --rose:         #ff7ab2;   /* code: selectors */
+  --silver-dark:  #d2d2d7;   /* light dividers */
+  --default-blue: #0000ee;   /* the browser's built-in link color */
+  --window-red:    #ff5f57;  /* browser window dots */
+  --window-yellow: #febc2e;
+  --window-green:  #28c840;
+
+  /* See-through versions (the last number is opacity) */
+  --graphite-80:   rgb(22 22 23 / 0.8);   /* frosted header */
+  --graphite-95:   rgb(22 22 23 / 0.95);  /* mobile menu panel */
+  --white-15:      rgb(255 255 255 / 0.15); /* thin lines on dark */
+  --black-75:      rgb(0 0 0 / 0.75);
+  --black-15:      rgb(0 0 0 / 0.15);
+  --shadow-soft:   rgb(0 0 0 / 0.06);
+  --shadow-strong: rgb(0 0 0 / 0.14);
+
+  /* ---------- COLOR STEP 2: THE ROLES ----------
+     Give each palette color a JOB. The rest of the
+     stylesheet uses ONLY these role names.
+     To restyle the site, point a role at a different color. */
+  --color-bg:             var(--white);       /* page background */
+  --color-surface:        var(--white);       /* cards */
+  --color-tint:           var(--silver);      /* alternate section background */
+  --color-text:           var(--graphite);    /* main text */
+  --color-muted:          var(--gray);        /* secondary text */
+  --color-accent:         var(--blue);        /* buttons, links, highlights */
+  --color-accent-on-dark: var(--blue-bright); /* accent on black sections */
+  --color-inverse:        var(--black);       /* dark sections */
+  --color-inverse-text:   var(--silver);      /* text on dark sections */
+  --color-header-bg:      var(--graphite-80); /* frosted sticky header */
+  --color-menu-bg:        var(--graphite-95); /* mobile menu panel */
+  --color-menu-divider:   var(--white-15);    /* lines between menu links */
+  --color-footer-bg:      var(--silver);      /* footer background */
+  --color-footer-line:    var(--silver-dark); /* footer divider */
+
+  /* Code block colors (syntax highlighting) */
+  --color-code-bg:        var(--graphite);
+  --color-code-selector:  var(--rose);
+  --color-code-property:  var(--teal);
+  --color-code-value:     var(--orange);
+  --color-code-keyword:   var(--green);
+  --color-code-punct:     var(--silver);
+  --color-overlay-light:  var(--black-75);    /* hero tint, center (darker, behind the text) */
+  --color-overlay-dark:   var(--black-15);    /* hero tint, edges (lighter, so the image shows) */
+
+  --color-plain-link:     var(--default-blue); /* "before CSS" demo link */
+  --color-border:         var(--silver);      /* thin dividers */
+
+  /* Gradient text highlight (the colorful word in the headline) */
+  --color-highlight-start: var(--blue-bright);
+  --color-highlight-end:   var(--purple);
+
+  /* Image placeholder gradients (start → end) */
+  --color-placeholder-1-start: var(--orange);
+  --color-placeholder-1-end:   var(--pink);
+  --color-placeholder-2-start: var(--blue);
+  --color-placeholder-2-end:   var(--teal);
+  --color-placeholder-3-start: var(--green);
+  --color-placeholder-3-end:   var(--mint);
+
+  /* Typography: families
+     The "system font stack" uses each device's built-in font:
+     San Francisco on Apple devices, Segoe UI on Windows,
+     Roboto on Android. No download needed. */
+  --font-display: -apple-system, BlinkMacSystemFont, "SF Pro Display",
+                  "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-body:    -apple-system, BlinkMacSystemFont, "SF Pro Text",
+                  "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+
+  /* Typography: fluid size scale
+     clamp(minimum, preferred, maximum) grows with the screen */
+  --text-sm: clamp(0.875rem, 0.8rem + 0.3vw, 1rem);
+  --text-base: clamp(1rem, 0.95rem + 0.3vw, 1.125rem);
+  --text-lg: clamp(1.25rem, 1.1rem + 0.8vw, 1.75rem);
+  --text-xl: clamp(2rem, 1.5rem + 2.5vw, 3.5rem);
+  --text-hero: clamp(3rem, 2rem + 5vw, 6rem);
+
+  /* Spacing scale: only use these values */
+  --space-xs: 0.5rem;
+  --space-sm: 1rem;
+  --space-md: 2rem;
+  --space-lg: 4rem;
+  --space-xl: 8rem;
+
+  /* Layout widths */
+  --width-text: 65ch;           /* comfortable reading line */
+  --width-content: 1200px;
+
+  /* Shape + motion */
+  --radius: 18px;                /* soft, rounded corners */
+  --shadow: 0 10px 30px var(--shadow-soft);
+  --ease: cubic-bezier(.2, .7, .2, 1);
+}
+
+
+/* =========================================================
+   2. BASE: reset + global defaults
+   ========================================================= */
+
+/* Reset: remove browser default spacing; make width include padding */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+}
+
+html {
+  scroll-behavior: smooth;      /* nav links glide to sections */
+}
+
+body {
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+  font-size: var(--text-base);
+  line-height: 1.6;
+  color: var(--color-text);
+  background: var(--color-bg);
+}
+
+h1, h2, h3 {
+  font-family: var(--font-display);
+  line-height: 1.08;
+  font-weight: 600;
+  letter-spacing: -0.02em;      /* tighter headlines, Apple-style */
+}
+
+h2 { font-size: var(--text-xl); }
+h3 { font-size: var(--text-lg); }
+
+img { max-width: 100%; display: block; }
+
+a { color: inherit; }
+
+ul { list-style: none; padding: 0; }
+
+
+/* =========================================================
+   3. LAYOUT: reusable primitives
+   Every section on the page is built from these few classes.
+   ========================================================= */
+
+/* Section: vertical rhythm between story beats */
+.section {
+  padding-block: var(--space-xl);
+  padding-inline: var(--space-sm);
+}
+
+.section--full {               /* fills the screen */
+  min-height: 100svh;
+  display: grid;
+  place-items: center;
+}
+
+.section--dark {
+  background: var(--color-inverse);
+  color: var(--color-inverse-text);
+}
+
+.section--tinted { background: var(--color-tint); }
+
+.section--accent {
+  background: var(--color-accent);
+  color: var(--color-inverse-text);
+}
+
+/* Container: controls width and centers content */
+.container {
+  width: 100%;
+  max-width: var(--width-content);
+  margin-inline: auto;
+}
+
+.container--narrow {
+  max-width: var(--width-text);
+  margin-inline: auto;          /* centers the narrow block */
+}
+
+/* Stack: consistent vertical space between children */
+.stack > * + * { margin-top: var(--space-sm); }
+.stack-lg > * + * { margin-top: var(--space-xl); }
+.stack > .grid,
+.stack > .cluster { margin-top: var(--space-md); }  /* extra room before groups */
+
+/* Cluster: items in a row that wrap (nav, button groups) */
+.cluster {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-sm);
+  align-items: center;
+}
+
+.cluster--center { justify-content: center; }
+
+/* Split: two columns; stacks on small screens */
+.split {
+  display: grid;
+  gap: var(--space-lg);
+  align-items: center;
+}
+
+@media (min-width: 768px) {
+  .split { grid-template-columns: 1fr 1fr; }
+  .split--reverse > :first-child { order: 2; }
+}
+
+/* Grid: responsive cards with no media query needed */
+.grid {
+  display: grid;
+  gap: var(--space-md);
+  grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr));
+}
+
+/* Utility */
+.center { text-align: center; }
+
+
+/* =========================================================
+   4. COMPONENTS
+   ========================================================= */
+
+/* Header */
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: var(--color-header-bg);
+  backdrop-filter: saturate(180%) blur(20px);
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
+  color: var(--color-inverse-text);
+  padding: var(--space-sm);
+}
+
+/* Logo on the LEFT, navigation on the RIGHT.
+   justify-content: space-between pushes them to opposite ends. */
+.site-header__inner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.site-header a { text-decoration: none; font-size: var(--text-sm); }
+.site-header a:not(.btn):not(.logo):hover { color: var(--color-accent-on-dark); }
+
+/* Logo: icon + text side by side */
+.logo {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  flex-shrink: 0;               /* logo never gets squished */
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: var(--text-base) !important;
+}
+
+.logo__icon {
+  width: 40px;
+  height: 40px;
+  transition: transform 0.3s var(--ease);
+}
+
+.logo:hover .logo__icon { transform: rotate(-8deg) scale(1.08); }
+
+/* Navigation links line up on the right */
+.site-nav .cluster {
+  justify-content: flex-end;
+  gap: var(--space-xs) var(--space-sm);
+}
+
+/* Current page link gets an accent underline */
+.site-nav a[aria-current="page"] {
+  color: var(--color-accent-on-dark);
+  border-bottom: 2px solid var(--color-accent-on-dark);
+  padding-bottom: 2px;
+}
+
+/* ---------- MOBILE NAVIGATION ----------
+   Desktop: links in a row (styles above).
+   Phones (under 768px): links hide behind a menu button
+   and open as a full-screen panel.
+   JavaScript only adds the class "menu-open" to <body>;
+   CSS does everything else. */
+
+/* Menu button: hidden on desktop */
+.menu-toggle {
+  display: none;
+  position: relative;
+  width: 44px;                  /* 44px = comfortable touch target */
+  height: 44px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+}
+
+/* The two bars of the button */
+.menu-toggle__bar {
+  position: absolute;
+  left: 11px;
+  width: 22px;
+  height: 2px;
+  border-radius: 2px;
+  background: currentColor;
+  transition: transform 0.35s var(--ease);
+}
+.menu-toggle__bar:nth-child(1) { top: 17px; }
+.menu-toggle__bar:nth-child(2) { top: 25px; }
+
+/* Menu open: bars rotate into an X */
+.menu-open .menu-toggle__bar:nth-child(1) { transform: translateY(4px) rotate(45deg); }
+.menu-open .menu-toggle__bar:nth-child(2) { transform: translateY(-4px) rotate(-45deg); }
+
+@media (max-width: 767px) {
+  .menu-toggle { display: block; }
+
+  /* The nav becomes a full-screen panel under the header */
+  .site-nav {
+    position: absolute;
+    top: 100%;                  /* starts right below the header */
+    left: 0;
+    right: 0;
+    height: 100svh;
+    padding: var(--space-md) var(--space-md);
+    background: var(--color-menu-bg);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+
+    /* Hidden until opened */
+    visibility: hidden;
+    opacity: 0;
+    transform: translateY(-12px);
+    transition: opacity 0.35s var(--ease), transform 0.35s var(--ease),
+                visibility 0.35s;
+  }
+
+  .menu-open .site-nav {
+    visibility: visible;
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Links stack in a column, big and easy to tap */
+  .site-nav .cluster {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0;
+  }
+
+  .site-nav li {
+    border-bottom: 1px solid var(--color-menu-divider);
+
+    /* each link slides in, one after another */
+    opacity: 0;
+    transform: translateY(-8px);
+    transition: opacity 0.4s var(--ease), transform 0.4s var(--ease);
+  }
+  .menu-open .site-nav li { opacity: 1; transform: none; }
+  .menu-open .site-nav li:nth-child(2) { transition-delay: 0.05s; }
+  .menu-open .site-nav li:nth-child(3) { transition-delay: 0.1s; }
+  .menu-open .site-nav li:nth-child(4) { transition-delay: 0.15s; }
+
+  .site-nav a:not(.btn) {
+    display: block;
+    padding: var(--space-sm) 0;
+    font-size: var(--text-lg);
+    font-weight: 600;
+  }
+
+  .site-nav a[aria-current="page"] { border-bottom: 0; }
+
+  /* The button becomes full width at the bottom */
+  .site-nav li:last-child { border-bottom: 0; padding-top: var(--space-md); }
+  .site-nav .btn { display: block; text-align: center; font-size: var(--text-base); padding: 0.9em; }
+
+  /* Stop the page behind from scrolling while the menu is open */
+  body.menu-open { overflow: hidden; }
+}
+
+/* Buttons */
+.btn {
+  display: inline-block;
+  padding: 0.85em 1.6em;
+  border-radius: 999px;
+  background: var(--color-accent);
+  color: var(--white);
+  font-weight: 500;
+  text-decoration: none;
+  border: 2px solid var(--color-accent);
+  transition: transform 0.2s var(--ease), background 0.2s var(--ease);
+}
+
+.btn:hover { transform: translateY(-3px); }
+
+.btn--ghost {
+  background: transparent;
+  border-color: currentColor;
+}
+
+.btn--small { padding: 0.5em 1.1em; }
+
+/* Card: image on top, text below */
+.card {
+  background: var(--color-surface);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  overflow: hidden;             /* clips the zooming image to the rounded corners */
+  transition: transform 0.4s var(--ease), box-shadow 0.4s var(--ease),
+              border-color 0.4s var(--ease);
+}
+
+/* Card image frame */
+.card__media {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;             /* hides the part of the image that grows */
+}
+
+.card__media .card__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;            /* for real <img> photos */
+  border-radius: 0;             /* card corners do the rounding */
+  transition: transform 0.6s var(--ease), filter 0.6s var(--ease);
+}
+
+/* Accent tint that fades in on hover */
+.card__media::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--color-accent);
+  opacity: 0;
+  mix-blend-mode: multiply;
+  transition: opacity 0.4s var(--ease);
+}
+
+.card__body { padding: var(--space-md); }
+.card__body > * + * { margin-top: var(--space-xs); }
+
+/* HOVER: card lifts, image zooms, tint fades in, accent line appears */
+.card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 20px 40px var(--shadow-strong);
+}
+
+.card:hover .card__img {
+  transform: scale(1.1);
+  filter: saturate(1.2);
+}
+
+.card:hover .card__media::after { opacity: 0.25; }
+
+.card__number {
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+  color: var(--color-accent);
+  font-weight: 700;
+}
+
+/* Split section images */
+.split__img {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+
+/* ---------- Browser window (before/after demo) ---------- */
+.browser {
+  margin: 0;
+  background: var(--color-surface);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+
+.browser__bar {
+  display: flex;
+  gap: 6px;
+  padding: 12px 14px;
+  background: var(--color-tint);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.browser__bar span {
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  background: var(--window-red);
+}
+.browser__bar span:nth-child(2) { background: var(--window-yellow); }
+.browser__bar span:nth-child(3) { background: var(--window-green); }
+
+.browser__body { min-height: 300px; }
+
+.browser__label {
+  padding: var(--space-xs) var(--space-sm);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--color-muted);
+  border-top: 1px solid var(--color-border);
+  text-align: center;
+}
+
+/* BEFORE: imitates the browser's default styles (no design at all) */
+.demo-plain {
+  padding: 8px;
+  font-family: "Times New Roman", Times, serif;
+  font-size: 16px;
+  line-height: normal;
+  color: var(--black);
+  background: var(--white);
+}
+.demo-plain h3 {
+  font-family: inherit;
+  font-size: 1.5em;
+  font-weight: 700;
+  letter-spacing: 0;
+  margin: 0.83em 0;
+}
+.demo-plain p { margin: 1em 0; }
+.demo-plain a { color: var(--color-plain-link); text-decoration: underline; }
+.demo-plain ul { list-style: disc; padding-left: 40px; margin: 1em 0; }
+
+/* AFTER: the same content using our design tokens */
+.demo-styled {
+  padding: var(--space-md);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-sm);
+  background:
+    radial-gradient(circle at 100% 0%, var(--color-highlight-end), transparent 55%),
+    linear-gradient(135deg, var(--color-placeholder-2-start), var(--color-highlight-start));
+  color: var(--white);
+}
+.demo-styled__nav {
+  display: flex;
+  gap: var(--space-sm);
+  font-size: var(--text-sm);
+  opacity: 0.85;
+  margin-bottom: var(--space-sm);
+}
+.demo-styled h3 { font-size: var(--text-xl); }
+.demo-styled .btn { background: var(--white); border-color: var(--white); color: var(--color-accent); }
+
+.compare { align-items: stretch; }
+
+/* ---------- Skill tiles: what CSS controls ---------- */
+.skills {
+  display: grid;
+  gap: var(--space-sm);
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  margin-top: var(--space-lg) !important;
+}
+
+.skill-tile {
+  background: var(--color-surface);
+  border-radius: var(--radius);
+  padding: var(--space-md) var(--space-sm);
+  text-align: center;
+  font-weight: 600;
+  box-shadow: var(--shadow);
+  transition: transform 0.3s var(--ease);
+}
+.skill-tile:hover { transform: translateY(-4px); }
+
+.skill-tile__visual {
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  margin-bottom: var(--space-xs);
+}
+
+/* Color: three swatches */
+.swatches span { width: 26px; height: 26px; border-radius: 50%; background: var(--blue); }
+.swatches span:nth-child(2) { background: var(--purple); }
+.swatches span:nth-child(3) { background: var(--orange); }
+
+/* Typography: big letters */
+.type-sample { font-size: 2.6rem; font-weight: 600; letter-spacing: -0.03em; color: var(--color-accent); }
+
+/* Spacing: bars of growing width */
+.spacing-bars { flex-direction: column; align-items: center; }
+.spacing-bars span { height: 8px; border-radius: 4px; background: var(--color-accent); }
+.spacing-bars span:nth-child(1) { width: 20px; }
+.spacing-bars span:nth-child(2) { width: 40px; }
+.spacing-bars span:nth-child(3) { width: 64px; }
+
+/* Layout: a tiny 2 x 2 grid */
+.mini-grid {
+  display: grid;
+  grid-template-columns: 22px 22px;
+  justify-content: center;
+  align-content: center;
+  gap: 4px;
+}
+.mini-grid span { height: 22px; border-radius: 5px; background: var(--color-accent); }
+.mini-grid span:nth-child(2), .mini-grid span:nth-child(3) { opacity: 0.5; }
+
+/* Motion: a dot that slides back and forth (it really moves!) */
+.motion-dot span {
+  width: 22px; height: 22px; border-radius: 50%;
+  background: var(--color-accent);
+  animation: slide 1.6s var(--ease) infinite alternate;
+}
+
+@keyframes slide {
+  from { transform: translateX(-28px); }
+  to   { transform: translateX(28px); }
+}
+
+/* Image placeholder (CSS-only version, for when you have no image file yet) */
+.img-placeholder {
+  aspect-ratio: 4 / 3;
+  border-radius: var(--radius);
+  background: linear-gradient(135deg, var(--color-placeholder-1-start), var(--color-placeholder-1-end));
+  display: grid;
+  place-items: center;
+  color: var(--color-inverse-text);
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.img-placeholder--alt {
+  background: linear-gradient(135deg, var(--color-placeholder-2-start), var(--color-placeholder-2-end));
+}
+
+.img-placeholder--third {
+  background: linear-gradient(135deg, var(--color-placeholder-3-start), var(--color-placeholder-3-end));
+}
+
+/* ---------- SWATCH PICKER (Try It section) ---------- */
+.swatch {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  padding: 0.6em 1.1em 0.6em 0.6em;
+  border-radius: 999px;
+  border: 2px solid var(--color-menu-divider);
+  background: transparent;
+  color: var(--color-inverse-text);
+  font: inherit;
+  font-size: var(--text-sm);
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.2s var(--ease), border-color 0.2s var(--ease);
+}
+
+.swatch:hover { transform: translateY(-3px); }
+
+/* The selected swatch gets a bright outline */
+.swatch[aria-pressed="true"] { border-color: var(--color-inverse-text); }
+
+.swatch__dot {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+}
+
+/* Live code line under the swatches */
+.token-readout code {
+  display: inline-block;
+  padding: 0.6em 1.2em;
+  border-radius: 999px;
+  background: var(--color-code-bg);
+  color: var(--color-code-property);
+  font-size: var(--text-sm);
+}
+
+#token-value {
+  color: var(--color-accent);
+  font-weight: 700;
+  transition: color 0.3s var(--ease);
+}
+
+/* ---------- FOOTER ---------- */
+.site-footer {
+  position: relative;
+  overflow: hidden;             /* keeps the giant wordmark from causing sideways scroll */
+  background: var(--color-footer-bg);
+  color: var(--color-text);
+  padding-top: var(--space-lg);
+  font-size: var(--text-sm);
+}
+
+/* Gradient line across the top of the footer */
+.site-footer::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--color-highlight-start),
+              var(--color-highlight-end), var(--color-placeholder-1-end));
+}
+
+/* Three columns on desktop, stacked on phones */
+.footer__grid {
+  display: grid;
+  gap: var(--space-lg);
+  padding-inline: var(--space-sm);
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 768px) {
+  .footer__grid {
+    grid-template-columns: 1fr auto 1.4fr;
+    align-items: start;
+  }
+}
+
+.footer__logo { color: var(--color-text); text-decoration: none; }
+.footer__brand p { color: var(--color-muted); font-size: var(--text-base); }
+
+.footer__heading {
+  font-weight: 600;
+  margin-bottom: var(--space-xs);
+}
+
+.footer__links li + li { margin-top: var(--space-xs); }
+.footer__links a {
+  color: var(--color-muted);
+  text-decoration: none;
+  transition: color 0.2s var(--ease);
+}
+.footer__links a:hover { color: var(--color-accent); }
+
+/* Credits code block */
+.footer__code {
+  margin: 0;
+  background: var(--color-code-bg);
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: var(--shadow);
+  transform: rotate(-1.5deg);   /* a playful tilt */
+  transition: transform 0.4s var(--ease);
+}
+.footer__code:hover { transform: rotate(0deg) scale(1.02); }
+
+.footer__code .browser__bar {
+  background: transparent;
+  border-bottom: 1px solid var(--color-menu-divider);
+}
+
+.footer__code pre {
+  margin: 0;
+  padding: var(--space-md);
+  overflow-x: auto;
+  font-family: ui-monospace, Menlo, Consolas, monospace;
+  font-size: var(--text-sm);
+  line-height: 1.8;
+}
+.footer__code code { background: none; padding: 0; color: var(--color-code-punct); }
+
+.code-selector { color: var(--color-code-selector); }
+.code-property { color: var(--color-code-property); }
+.code-value    { color: var(--color-code-value); }
+.code-keyword  { color: var(--color-code-keyword); }
+.code-punct    { color: var(--color-code-punct); }
+
+/* Blinking text cursor */
+.code-cursor {
+  display: inline-block;
+  width: 2px;
+  height: 1.1em;
+  margin-left: 4px;
+  vertical-align: text-bottom;
+  background: var(--color-accent-on-dark);
+  animation: blink 1s steps(1) infinite;
+}
+
+@keyframes blink {
+  50% { opacity: 0; }
+}
+
+/* Giant wordmark with a moving gradient */
+.footer__wordmark {
+  margin-top: var(--space-lg);
+  margin-bottom: 0;
+  padding-bottom: 0.08em;       /* room so no letter gets clipped */
+  text-align: center;
+  font-family: var(--font-display);
+  font-size: clamp(4rem, 19vw, 17rem);
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.06em;
+  white-space: nowrap;
+  background: linear-gradient(90deg, var(--color-highlight-start), var(--color-highlight-end),
+              var(--color-placeholder-1-end), var(--color-highlight-start));
+  background-size: 300% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  opacity: 0.9;
+  animation: shimmer 12s linear infinite;
+  user-select: none;
+}
+
+@keyframes shimmer {
+  to { background-position: 300% 0; }
+}
+
+/* Bottom bar: sits on top of the wordmark */
+.footer__bottom {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-sm);
+  border-top: 1px solid var(--color-footer-line);
+  background: var(--color-footer-bg);
+  color: var(--color-muted);
+}
+
+/* Round "back to top" button */
+.to-top {
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--color-accent);
+  color: var(--white);
+  text-decoration: none;
+  font-size: 1.2rem;
+  transition: transform 0.3s var(--ease);
+}
+.to-top:hover { transform: translateY(-4px); }
+
+
+/* =========================================================
+   5. SECTIONS: story-specific styling
+   ========================================================= */
+
+.eyebrow {
+  font-size: var(--text-sm);
+  font-weight: 600;
+  letter-spacing: 0;
+  color: var(--color-accent);
+}
+
+.lead {
+  font-size: var(--text-lg);
+  max-width: 40ch;
+}
+
+.center .lead { margin-inline: auto; }
+
+/* Gradient text: the colorful word in the hero headline */
+.accent {
+  background: linear-gradient(90deg, var(--color-highlight-start), var(--color-highlight-end));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* On black sections, use the brighter accent so it stays readable */
+.section--dark .eyebrow { color: var(--color-accent-on-dark); }
+
+/* Hook: three stacked layers
+   1. .hero__media    the image (bottom)
+   2. .hero__overlay  dark tint for readable text (middle)
+   3. .hero__content  the text (top)                        */
+.hero {
+  min-height: 85svh;            /* a little shorter than full screen */
+  padding-block: var(--space-lg);
+  position: relative;           /* layers position against this */
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.hero__media,
+.hero__overlay {
+  position: absolute;
+  inset: 0;                     /* stretch to all four edges */
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+}
+
+img.hero__media {
+  object-fit: cover;            /* fill the area without stretching */
+  object-position: top center;   /* keep the top of the image right under the nav */
+}
+
+/* Placeholder look (removed when you swap in a real <img>) */
+.hero__media.img-placeholder {
+  border-radius: 0;
+  aspect-ratio: auto;
+  background: linear-gradient(135deg, var(--color-placeholder-2-start), var(--color-placeholder-2-end) 55%, var(--color-placeholder-1-end));
+  place-items: start end;       /* label in the top-right corner */
+  padding: var(--space-sm);
+  font-size: var(--text-sm);
+}
+
+.hero__media.img-placeholder span {
+  border: 2px dashed currentColor;
+  padding: var(--space-xs) var(--space-sm);
+  border-radius: var(--radius);
+  opacity: 0.8;
+}
+
+.hero__overlay {
+  background:
+    radial-gradient(ellipse 50% 60% at 50% 50%, var(--color-overlay-light), var(--color-overlay-dark));
+}
+
+.hero-title {
+  font-size: var(--text-hero);
+  font-weight: 700;
+  max-width: 12ch;
+  margin-inline: auto;          /* centers the title block */
+}
+
+/* Inline code, e.g. <code>margin: 0</code> */
+code {
+  font-family: ui-monospace, Menlo, Consolas, monospace;
+  font-size: 0.9em;
+  background: var(--color-tint);
+  padding: 0.1em 0.4em;
+  border-radius: 4px;
+}
+
+
+/* =========================================================
+   6. MOTION: the "dynamic" layer
+   Added LAST, so the layout works without it.
+   ========================================================= */
+
+@keyframes reveal {
+  from { opacity: 0; transform: translateY(40px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Scroll-driven reveal: content fades up as it enters the screen.
+   @supports = only run in browsers that understand it;
+   other browsers simply show the content normally. */
+@supports (animation-timeline: view()) {
+  .reveal {
+    animation: reveal linear both;
+    animation-timeline: view();
+    animation-range: entry 0% cover 30%;
+  }
+}
+
+/* Respect users who turn off motion in their system settings */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+  html { scroll-behavior: auto; }
+}

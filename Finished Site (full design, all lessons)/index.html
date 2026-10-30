@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Web CSS Design Template | Learn CSS for Dynamic Websites</title>
+
+  <!-- Fonts: none to load! The CSS uses the system font stack
+       (San Francisco on Apple devices). See --font-body in the tokens. -->
+
+  <!-- ONE external stylesheet (css/style.css), organized like a design system -->
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- ===== SITE HEADER ===== -->
+  <header class="site-header">
+    <div class="container site-header__inner">
+      <!-- LOGO (left): image icon + site name.
+           To use your own logo, replace images/logo.svg
+           (or change the src to your file, e.g. images/logo.png) -->
+      <a href="#hook" class="logo">
+        <img class="logo__icon" src="images/logo.svg" alt="" width="40" height="40">
+        <span class="logo__text">CSS Design Template</span>
+      </a>
+
+      <!-- MENU BUTTON (only shows on phones)
+           The two bars turn into an X when the menu is open.
+           aria-expanded tells screen readers if the menu is open. -->
+      <button class="menu-toggle" type="button"
+              aria-expanded="false" aria-controls="site-nav" aria-label="Open menu">
+        <span class="menu-toggle__bar"></span>
+        <span class="menu-toggle__bar"></span>
+      </button>
+
+      <!-- NAVIGATION (right on desktop, full-screen menu on phones) -->
+      <nav class="site-nav" id="site-nav" aria-label="Main navigation">
+        <ul class="cluster">
+          <li><a href="#hook" aria-current="page">Home</a></li>
+          <li><a href="#outcomes">What You'll Build</a></li>
+          <li><a href="#path">Learning Path</a></li>
+          <li><a href="#action" class="btn btn--small">Try It</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+
+    <!-- ==================================================
+         BEAT 1: HOOK. Grab attention in 3 seconds.
+         Primitives: section--full, section--dark, container, stack, center
+         ================================================== -->
+    <section class="section section--full section--dark hero" id="hook">
+
+      <!-- HERO IMAGE: images/hero.svg (code editor -> styled website)
+           To use your own photo, change the src, e.g. images/hero.jpg -->
+      <img class="hero__media" src="images/hero.svg" alt="">
+
+      <!-- Dark layer so white text stays readable on any photo -->
+      <div class="hero__overlay"></div>
+
+      <div class="container stack center hero__content">
+        <p class="eyebrow">Web CSS Design Template</p>
+        <h1 class="hero-title">Learn CSS. Build sites that <span class="accent">move.</span></h1>
+        <p class="lead">A step-by-step path from your first selector to dynamic, responsive websites.</p>
+      </div>
+    </section>
+
+    <!-- ==================================================
+         BEAT 2: OUTCOMES. Show the ending first,
+         then tell how to get there.
+         Primitives: grid, card (component)
+         ================================================== -->
+    <section class="section" id="outcomes">
+      <div class="container stack">
+        <div class="container--narrow stack center reveal">
+          <p class="eyebrow">What You'll Be Able to Build</p>
+          <h2>Where this template takes you.</h2>
+        </div>
+
+        <div class="grid reveal">
+
+          <!-- CARD IMAGES are placeholder SVGs in the images folder.
+               To use your own, change the src and update the alt text. -->
+          <article class="card">
+            <div class="card__media">
+              <img class="card__img" src="images/card-layouts.svg" alt="Browser window showing a grid layout">
+            </div>
+            <div class="card__body">
+              <p class="card__number">01</p>
+              <h3>Layouts</h3>
+              <p>Use Flexbox and Grid to build pages that adapt to any screen, from phone to desktop.</p>
+            </div>
+          </article>
+
+          <article class="card">
+            <div class="card__media">
+              <img class="card__img" src="images/card-design-systems.svg" alt="Color swatches, type sample and spacing scale">
+            </div>
+            <div class="card__body">
+              <p class="card__number">02</p>
+              <h3>Design Systems</h3>
+              <p>Store colors, fonts and spacing as tokens, so one edit restyles the entire site.</p>
+            </div>
+          </article>
+
+          <article class="card">
+            <div class="card__media">
+              <img class="card__img" src="images/card-motion.svg" alt="A circle moving along an animation curve">
+            </div>
+            <div class="card__body">
+              <p class="card__number">03</p>
+              <h3>Motion</h3>
+              <p>Add transitions, hover effects and scroll animations that bring a page to life.</p>
+            </div>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================================================
+         BEAT 3: THE PROBLEM. Why CSS matters, shown visually.
+         A live BEFORE / AFTER: the same content without and with CSS.
+         Primitives: section, container, stack, split, grid
+         Components: browser, demo-plain, demo-styled, skill-tile
+         ================================================== -->
+    <section class="section section--tinted" id="path">
+      <div class="container stack">
+
+        <div class="container--narrow stack center reveal">
+          <p class="eyebrow">Step 1 · The Starting Point</p>
+          <h2>Plain HTML works. It just doesn't speak.</h2>
+          <p class="lead">Same content. Same HTML. The only difference is CSS.</p>
+        </div>
+
+        <!-- BEFORE / AFTER -->
+        <div class="split compare reveal">
+
+          <!-- BEFORE: what the browser shows with no CSS -->
+          <figure class="browser">
+            <div class="browser__bar"><span></span><span></span><span></span></div>
+            <div class="browser__body demo-plain">
+              <h3>My Portfolio</h3>
+              <p>Welcome to my website. I design and build web pages.</p>
+              <a href="#path">See my work</a>
+              <ul>
+                <li>Home</li>
+                <li>About</li>
+                <li>Contact</li>
+              </ul>
+            </div>
+            <figcaption class="browser__label">Before: HTML only</figcaption>
+          </figure>
+
+          <!-- AFTER: the same content, styled -->
+          <figure class="browser">
+            <div class="browser__bar"><span></span><span></span><span></span></div>
+            <div class="browser__body demo-styled">
+              <ul class="demo-styled__nav">
+                <li>Home</li>
+                <li>About</li>
+                <li>Contact</li>
+              </ul>
+              <h3>My Portfolio</h3>
+              <p>Welcome to my website. I design and build web pages.</p>
+              <a href="#path" class="btn btn--small">See my work</a>
+            </div>
+            <figcaption class="browser__label">After: HTML + CSS</figcaption>
+          </figure>
+
+        </div>
+
+        <!-- WHAT CSS CONTROLS: one tile per skill -->
+        <ul class="skills reveal" aria-label="What CSS controls">
+          <li class="skill-tile">
+            <div class="skill-tile__visual swatches"><span></span><span></span><span></span></div>
+            <p>Color</p>
+          </li>
+          <li class="skill-tile">
+            <div class="skill-tile__visual type-sample">Aa</div>
+            <p>Typography</p>
+          </li>
+          <li class="skill-tile">
+            <div class="skill-tile__visual spacing-bars"><span></span><span></span><span></span></div>
+            <p>Spacing</p>
+          </li>
+          <li class="skill-tile">
+            <div class="skill-tile__visual mini-grid"><span></span><span></span><span></span><span></span></div>
+            <p>Layout</p>
+          </li>
+          <li class="skill-tile">
+            <div class="skill-tile__visual motion-dot"><span></span></div>
+            <p>Motion</p>
+          </li>
+        </ul>
+
+      </div>
+    </section>
+
+    <!-- ==================================================
+         BEAT 4: THE JOURNEY. The learning path.
+         Primitives: split, split--reverse, stack
+         Alternate the image side to keep the reader moving.
+         ================================================== -->
+    <section class="section" id="steps">
+      <div class="container stack-lg">
+
+        <div class="split reveal">
+          <img class="split__img" src="images/step-box-model.svg" alt="Diagram of the CSS box model: margin, border, padding and content">
+          <div class="stack">
+            <p class="eyebrow">Step 2 · The Foundation</p>
+            <h2>Start with the box and the cascade.</h2>
+            <p>Every element is a box made of content, padding, border and margin. Learn how selectors target elements, how the cascade decides which rule wins, and why a reset like <code>margin: 0</code> gives you a clean start.</p>
+          </div>
+        </div>
+
+        <div class="split split--reverse reveal">
+          <img class="split__img" src="images/step-layout.svg" alt="Wireframes of a Flexbox row and a Grid layout">
+          <div class="stack">
+            <p class="eyebrow">Step 3 · Layout and Systems</p>
+            <h2>Lay it out with Flexbox, Grid and tokens.</h2>
+            <p>Flexbox arranges items in a row or column. Grid builds full page layouts. Design tokens keep every color and space consistent, so the site feels like one system instead of a collection of pages.</p>
+          </div>
+        </div>
+
+        <div class="split reveal">
+          <img class="split__img" src="images/step-motion.svg" alt="A card lifting up when the cursor hovers over it">
+          <div class="stack">
+            <p class="eyebrow">Step 4 · Make It Dynamic</p>
+            <h2>Bring it to life with motion.</h2>
+            <p>Transitions smooth out hover states, keyframe animations add movement, and scroll-driven effects reveal content as visitors read. Motion comes last, after the layout works without it.</p>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ==================================================
+         BEAT 5: TRY IT. Empower the reader to act.
+         A live demo: each button changes ONE token (--color-accent)
+         and every button, link and highlight on the page updates.
+         Primitives: section--dark, container--narrow, stack, center, cluster
+         Component: swatch-picker (see js/script.js, part 2)
+         ================================================== -->
+    <section class="section section--dark" id="action">
+      <div class="container container--narrow stack center reveal">
+        <p class="eyebrow">Try It</p>
+        <h2>Change one token. Watch the page respond.</h2>
+        <p class="lead">Each color below changes a single line of CSS. Pick one, then scroll back up and see what changed.</p>
+
+        <!-- The swatches: data-color holds the palette token to use -->
+        <div class="swatch-picker cluster cluster--center" role="group" aria-label="Choose an accent color">
+          <button class="swatch" type="button" data-color="--blue" aria-pressed="true">
+            <span class="swatch__dot" style="background: var(--blue)"></span>Blue
+          </button>
+          <button class="swatch" type="button" data-color="--purple" aria-pressed="false">
+            <span class="swatch__dot" style="background: var(--purple)"></span>Purple
+          </button>
+          <button class="swatch" type="button" data-color="--pink" aria-pressed="false">
+            <span class="swatch__dot" style="background: var(--pink)"></span>Pink
+          </button>
+          <button class="swatch" type="button" data-color="--orange" aria-pressed="false">
+            <span class="swatch__dot" style="background: var(--orange)"></span>Orange
+          </button>
+          <button class="swatch" type="button" data-color="--green" aria-pressed="false">
+            <span class="swatch__dot" style="background: var(--green)"></span>Green
+          </button>
+        </div>
+
+        <!-- Live code readout: shows the exact line that changed -->
+        <p class="token-readout" aria-live="polite">
+          <code>--color-accent: var(<span id="token-value">--blue</span>);</code>
+        </p>
+
+        <div class="cluster cluster--center">
+          <a href="#path" class="btn">Begin Step 1</a>
+          <a href="#outcomes" class="btn btn--ghost">See What Changed</a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ===== FOOTER =====
+       Creative idea: the credits are written as a CSS rule!
+       STUDENTS: change the name and date in TWO places:
+       the code block and the bottom bar. -->
+  <footer class="site-footer">
+
+    <div class="container footer__grid">
+
+      <!-- Column 1: brand -->
+      <div class="footer__brand stack">
+        <a href="#hook" class="logo footer__logo">
+          <img class="logo__icon" src="images/logo.svg" alt="" width="40" height="40">
+          <span>CSS Design Template</span>
+        </a>
+        <p>One HTML file. One stylesheet.<br>A lot of curiosity.</p>
+      </div>
+
+      <!-- Column 2: links -->
+      <nav class="footer__links" aria-label="Footer navigation">
+        <p class="footer__heading">Explore</p>
+        <ul>
+          <li><a href="#hook">Home</a></li>
+          <li><a href="#outcomes">What You'll Build</a></li>
+          <li><a href="#path">Learning Path</a></li>
+          <li><a href="#action">Try It</a></li>
+        </ul>
+      </nav>
+
+      <!-- Column 3: credits, written as CSS -->
+      <figure class="footer__code">
+        <div class="browser__bar"><span></span><span></span><span></span></div>
+<pre><code><span class="code-selector">.credits</span> <span class="code-punct">{</span>
+  <span class="code-property">designer</span><span class="code-punct">:</span> <span class="code-value">"Julie Gilliam"</span><span class="code-punct">;</span>
+  <span class="code-property">date</span><span class="code-punct">:</span> <span class="code-value">"<time datetime="2026-10-12">October 12, 2026</time>"</span><span class="code-punct">;</span>
+  <span class="code-property">course</span><span class="code-punct">:</span> <span class="code-value">"ITD 110"</span><span class="code-punct">;</span>
+  <span class="code-property">status</span><span class="code-punct">:</span> <span class="code-keyword">always-learning</span><span class="code-punct">;</span>
+<span class="code-punct">}</span><span class="code-cursor" aria-hidden="true"></span></code></pre>
+      </figure>
+
+    </div>
+
+    <!-- Giant shimmering wordmark (decorative) -->
+    <p class="footer__wordmark" aria-hidden="true">learn css.</p>
+
+    <!-- Bottom bar -->
+    <div class="container footer__bottom">
+      <p>&copy; <time datetime="2026-10-12">October 12, 2026</time> · Designed by Julie Gilliam · ITD 110</p>
+      <a href="#hook" class="to-top" aria-label="Back to top">
+        <span aria-hidden="true">&uarr;</span>
+      </a>
+    </div>
+
+  </footer>
+
+  <!-- JavaScript: opens and closes the mobile menu -->
+  <script src="js/script.js"></script>
+</body>
+</html>
