@@ -1,0 +1,260 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Storytelling Starter Review</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: a two-column grading sheet; red pen for the AI default, the starter's own blue for the decision that replaced it */
+:root {
+  --bg: #eef1f4;
+  --surface: #ffffff;
+  --fg: #1c2530;
+  --muted: #5a6776;
+  --line: #d3dae2;
+  --pen: #c9302c;
+  --pen-soft: #fbeceb;
+  --good: #0071e3;
+  --good-soft: #e8f1fc;
+  --code-bg: #f6f8fa;
+  --font-display: "Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --font-body: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #12171d; --surface: #1a2129; --fg: #e4e9ef; --muted: #98a5b3; --line: #2c3742;
+    --pen: #ff6b5e; --pen-soft: #2a1a1a; --good: #4aa8ff; --good-soft: #14243a; --code-bg: #0f1419;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #12171d; --surface: #1a2129; --fg: #e4e9ef; --muted: #98a5b3; --line: #2c3742;
+  --pen: #ff6b5e; --pen-soft: #2a1a1a; --good: #4aa8ff; --good-soft: #14243a; --code-bg: #0f1419;
+  color-scheme: dark;
+}
+body { background: var(--bg); color: var(--fg); font-family: var(--font-body); font-size: 1rem; line-height: 1.55; padding-inline: 16px; padding-block: 28px 56px; }
+.wrap { max-width: 1080px; margin-inline: auto; display: grid; gap: 28px; }
+
+.eyebrow { font-family: var(--font-mono); font-size: .75rem; letter-spacing: .08em; text-transform: uppercase; color: var(--good); font-weight: 600; }
+h1 { font-family: var(--font-display); font-weight: 800; font-size: clamp(1.8rem, 4.5vw, 2.8rem); line-height: 1.05; margin: 0; text-wrap: balance; }
+.intro { display: grid; gap: 10px; }
+.intro p { margin: 0; max-width: 68ch; color: var(--muted); }
+
+.thesis { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px; }
+.thesis div { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 16px 18px; display: grid; gap: 6px; }
+.thesis b { font-family: var(--font-display); font-size: 1.15rem; }
+.thesis .ai b { color: var(--pen); }
+.thesis .st b { color: var(--good); }
+.thesis p { margin: 0; color: var(--muted); font-size: .95rem; }
+
+h2 { font-family: var(--font-display); font-weight: 800; font-size: 1.5rem; margin: 0; }
+.colheads { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; font-family: var(--font-mono); font-size: .75rem; letter-spacing: .06em; text-transform: uppercase; font-weight: 600; }
+.colheads span:first-child { color: var(--pen); }
+.colheads span:last-child { color: var(--good); }
+
+.rows { display: grid; gap: 14px; }
+.row { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
+.row h3 { margin: 0; padding: 12px 18px; font-size: 1.02rem; border-bottom: 1px solid var(--line); display: flex; gap: 10px; align-items: baseline; }
+.row h3 small { font-family: var(--font-mono); font-size: .72rem; color: var(--muted); font-weight: 400; letter-spacing: .04em; }
+.pair { display: grid; grid-template-columns: 1fr 1fr; }
+.side { padding: 14px 18px; display: grid; gap: 8px; align-content: start; min-width: 0; }
+.side.ai { background: var(--pen-soft); border-right: 1px solid var(--line); }
+.side.st { background: var(--good-soft); }
+.side p { margin: 0; font-size: .94rem; }
+.side .tag { font-family: var(--font-mono); font-size: .68rem; letter-spacing: .06em; text-transform: uppercase; font-weight: 600; display: none; }
+.side.ai .tag { color: var(--pen); }
+.side.st .tag { color: var(--good); }
+pre { margin: 0; background: var(--code-bg); border: 1px solid var(--line); border-radius: 6px; padding: 10px 12px; overflow-x: auto; font-family: var(--font-mono); font-size: .76rem; line-height: 1.55; color: var(--fg); }
+code { font-family: var(--font-mono); font-size: .86em; }
+.why { padding: 10px 18px 14px; border-top: 1px solid var(--line); font-size: .92rem; color: var(--muted); }
+.why b { color: var(--fg); }
+
+.flow { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+.flow span { font-size: .8rem; padding: 3px 9px; border-radius: 999px; border: 1px solid var(--line); background: var(--surface); }
+.flow i { font-style: normal; color: var(--muted); font-size: .8rem; }
+
+.note { background: var(--surface); border: 1px solid var(--line); border-left: 4px solid var(--good); border-radius: 8px; padding: 16px 18px; display: grid; gap: 8px; max-width: 78ch; }
+.note p { margin: 0; }
+
+@media (max-width: 680px) {
+  .pair { grid-template-columns: 1fr; }
+  .side.ai { border-right: 0; border-bottom: 1px solid var(--line); }
+  .colheads { display: none; }
+  .side .tag { display: block; }
+}
+</style>
+
+<div class="wrap">
+  <header class="intro">
+    <div class="eyebrow">ITD 110 · Exhibit B</div>
+    <h1>Storytelling Starter Review</h1>
+    <p>The Nexora page and the storytelling starter use the same building blocks: a hero, three cards, a call to action and a footer. One was generated without anyone making a decision. The other was designed. Here is the difference, row by row, with code from each.</p>
+  </header>
+
+  <div class="thesis">
+    <div class="ai"><b>Nexora: assembled</b><p>Sections are there because landing pages usually have them. The words and pictures could belong to any product.</p></div>
+    <div class="st"><b>Starter: authored</b><p>Every section has one job in a story, every claim is backed by something on the page, and the code teaches what it does.</p></div>
+  </div>
+
+  <section style="display:grid;gap:14px">
+    <h2>Side by side</h2>
+    <div class="colheads"><span>Nexora (AI default)</span><span>Storytelling starter</span></div>
+    <div class="rows">
+
+      <article class="row">
+        <h3>The headline <small>hero</small></h3>
+        <div class="pair">
+          <div class="side ai"><span class="tag">Nexora</span><pre>Elevate Your Workflow with
+AI-Powered Solutions</pre><p>Could sell a calendar, a CRM or a toaster.</p></div>
+          <div class="side st"><span class="tag">Starter</span><pre>Learn CSS. Build sites that move.
+A step-by-step path from your first
+selector to dynamic, responsive websites.</pre><p>Names the subject, the reader and the result in eleven words.</p></div>
+        </div>
+        <p class="why"><b>Why it matters:</b> a visitor decides in a few seconds whether a page is for them. Only one of these lets them decide.</p>
+      </article>
+
+      <article class="row">
+        <h3>Page structure <small>sections</small></h3>
+        <div class="pair">
+          <div class="side ai"><span class="tag">Nexora</span>
+            <div class="flow"><span>Hero</span><i>·</i><span>Logos</span><i>·</i><span>Features</span><i>·</i><span>Stats</span><i>·</i><span>Testimonials</span><i>·</i><span>CTA</span></div>
+            <p>A checklist of what landing pages contain. Reorder the sections and nothing breaks, because nothing connects them.</p></div>
+          <div class="side st"><span class="tag">Starter</span>
+            <div class="flow"><span>Hook</span><i>→</i><span>Outcomes</span><i>→</i><span>Problem</span><i>→</i><span>Journey</span><i>→</i><span>Try it</span></div>
+            <p>Story beats, each labeled in the HTML comments with its purpose. Each section sets up the next.</p></div>
+        </div>
+        <p class="why"><b>Why it matters:</b> structure is the first design decision. Students who plan the story before the layout stop producing section soup.</p>
+      </article>
+
+      <article class="row">
+        <h3>The three cards <small>outcomes</small></h3>
+        <div class="pair">
+          <div class="side ai"><span class="tag">Nexora</span><pre>🚀 Lightning Fast
+🔒 Secure by Design
+⚡ Seamless Integration</pre><p>Emoji icons and copy that fits any competitor's site.</p></div>
+          <div class="side st"><span class="tag">Starter</span><pre>01 Layouts         Flexbox and Grid…
+02 Design Systems  colors, fonts and
+                   spacing as tokens…
+03 Motion          transitions, hover…</pre><p>Each card names a real skill, has its own illustration and real alt text, and previews the learning path below it.</p></div>
+        </div>
+        <p class="why"><b>Why it matters:</b> the test for a card is whether you can swap it onto another site. The starter's cards only make sense here.</p>
+      </article>
+
+      <article class="row">
+        <h3>Proof <small>evidence</small></h3>
+        <div class="pair">
+          <div class="side ai"><span class="tag">Nexora</span><pre>10K+ Happy Users · 99.9% Uptime
+"Nexora has completely transformed
+the way our team works!" — Sarah J.</pre><p>Invented numbers and invented people.</p></div>
+          <div class="side st"><span class="tag">Starter</span><pre>&lt;figure class="browser"&gt; Before: HTML only
+&lt;figure class="browser"&gt; After: HTML + CSS
+"Same content. Same HTML. The only
+ difference is CSS."</pre><p>A live before-and-after. The page proves its own claim instead of asking you to trust it.</p></div>
+        </div>
+        <p class="why"><b>Why it matters:</b> showing beats telling, and fake social proof is a liability. A demo is honest and memorable.</p>
+      </article>
+
+      <article class="row">
+        <h3>Color <small>tokens</small></h3>
+        <div class="pair">
+          <div class="side ai"><span class="tag">Nexora</span><pre>bg-gradient-to-br from-violet-100
+via-blue-100 to-indigo-100
+from-violet-500 to-blue-500</pre><p>The default AI gradient, hard-coded in class names on each element.</p></div>
+          <div class="side st"><span class="tag">Starter</span><pre>/* STEP 1: THE PALETTE */
+--blue: #0071e3;
+/* STEP 2: THE ROLES */
+--color-accent: var(--blue);</pre><p>Palette, then roles. Components use only role names, so one line restyles the site.</p></div>
+        </div>
+        <p class="why"><b>Why it matters:</b> this is the difference between a page and a system. The "Try it" section turns that idea into something students can click.</p>
+      </article>
+
+      <article class="row">
+        <h3>Interaction <small>JavaScript</small></h3>
+        <div class="pair">
+          <div class="side ai"><span class="tag">Nexora</span><pre>.card:hover { transform: translateY(-6px); }
+.blob { animation: float 9s infinite; }</pre><p>Motion as decoration: things lift and float because templates do that.</p></div>
+          <div class="side st"><span class="tag">Starter</span><pre>document.documentElement.style
+  .setProperty('--color-accent',
+               `var(${color})`);</pre><p>One line of JavaScript changes one token, and a live readout (<code>aria-live</code>) shows the exact CSS that changed.</p></div>
+        </div>
+        <p class="why"><b>Why it matters:</b> the interaction teaches the lesson of the page. Motion is the last step of the path, after layout works without it.</p>
+      </article>
+
+      <article class="row">
+        <h3>Buttons and links <small>navigation</small></h3>
+        <div class="pair">
+          <div class="side ai"><span class="tag">Nexora</span><pre>&lt;a href="#"&gt;Get Started&lt;/a&gt;
+&lt;a href="#"&gt;Learn More&lt;/a&gt;
+&lt;a href="#"&gt;Careers&lt;/a&gt; &lt;a href="#"&gt;Press&lt;/a&gt;…</pre><p>Vague labels pointing nowhere, plus twelve footer links to pages that don't exist.</p></div>
+          <div class="side st"><span class="tag">Starter</span><pre>&lt;a href="#action"&gt;Try It&lt;/a&gt;
+&lt;a href="#path"&gt;Begin Step 1&lt;/a&gt;
+&lt;a href="#outcomes"&gt;See What Changed&lt;/a&gt;</pre><p>Every label says what happens, and every link lands on a real section.</p></div>
+        </div>
+        <p class="why"><b>Why it matters:</b> a link is a promise. Broken promises are the fastest way to lose a visitor's trust.</p>
+      </article>
+
+      <article class="row">
+        <h3>Typography <small>type scale</small></h3>
+        <div class="pair">
+          <div class="side ai"><span class="tag">Nexora</span><pre>font-family: "Inter";
+text-6xl · text-lg · text-sm</pre><p>Inter because it's the default, sizes picked per element.</p></div>
+          <div class="side st"><span class="tag">Starter</span><pre>--font-body: -apple-system, … "Segoe UI",
+             Roboto, …;
+--text-hero: clamp(3rem, 2rem + 5vw, 6rem);
+--width-text: 65ch;</pre><p>The system stack is a stated choice (no download, native feel), with a fluid scale and a readable line length.</p></div>
+        </div>
+        <p class="why"><b>Why it matters:</b> both may end up sans-serif. One is a decision with a reason written next to it.</p>
+      </article>
+
+      <article class="row">
+        <h3>Accessibility <small>everyone can use it</small></h3>
+        <div class="pair">
+          <div class="side ai"><span class="tag">Nexora</span><pre>&lt;div class="text-3xl"&gt;🚀&lt;/div&gt;
+&lt;p class="text-slate-400"&gt;…&lt;/p&gt;
+&lt;i&gt;&lt;/i&gt;&lt;i&gt;&lt;/i&gt;  &lt;!-- social icons --&gt;</pre><p>Emoji read aloud, pale grey body text and unlabeled icons.</p></div>
+          <div class="side st"><span class="tag">Starter</span><pre>aria-expanded="false" aria-controls="site-nav"
+if (event.key === 'Escape') setMenu(false);
+alt="" on decorative images, real alt on content
+@media (prefers-reduced-motion: reduce)</pre><p>The menu announces its state and closes with Escape. Alt text is written for meaning, and motion respects user settings.</p></div>
+        </div>
+        <p class="why"><b>Why it matters:</b> AI tools rarely add these unless asked. Knowing to ask is the skill.</p>
+      </article>
+
+      <article class="row">
+        <h3>The footer <small>credits</small></h3>
+        <div class="pair">
+          <div class="side ai"><span class="tag">Nexora</span><pre>© 2026 Nexora. All rights reserved.
+Made with ❤️</pre><p>Boilerplate under a grid of dead links.</p></div>
+          <div class="side st"><span class="tag">Starter</span><pre>.credits {
+  designer: "Julie Gilliam";
+  course: "ITD 110";
+  status: always-learning;
+}</pre><p>The credits are written as a CSS rule. It's on-subject, it's personal, and it's a detail only this site would have.</p></div>
+        </div>
+        <p class="why"><b>Why it matters:</b> one specific detail does more for a page's identity than any amount of gradient.</p>
+      </article>
+
+      <article class="row">
+        <h3>The code itself <small>maintainability</small></h3>
+        <div class="pair">
+          <div class="side ai"><span class="tag">Nexora</span><pre>&lt;div class="rounded-2xl shadow-xl p-8
+  hover:-translate-y-1 transition"&gt;</pre><p>Utility-class soup with no comments. A student can copy it but can't learn from it.</p></div>
+          <div class="side st"><span class="tag">Starter</span><pre>1. TOKENS      design decisions
+2. BASE        reset + global defaults
+3. LAYOUT      reusable primitives
+4. COMPONENTS  buttons, cards, header…
+5. SECTIONS    story-specific styling
+6. MOTION      the "dynamic" layer</pre><p>One stylesheet, ordered by the cascade and commented throughout. The code is part of the lesson.</p></div>
+        </div>
+        <p class="why"><b>Why it matters:</b> students will edit this page. Code they can read is code they can own.</p>
+      </article>
+
+    </div>
+  </section>
+
+  <div class="note">
+    <p><b>A fair point to raise with students.</b> The starter shares two surface traits with Nexora: a gradient on one headline word and a centered hero. That's fine. Good design isn't about avoiding every trend; it's about every choice having a reason. Here the gradient is a token you can change, and the centered hero sits above content that earns it.</p>
+    <p><b>The one-sentence version:</b> AI can produce the shape of a website. Knowing what you're doing is what fills that shape with a story, real proof and decisions you can explain.</p>
+  </div>
+</div>
+
+</body></html>
