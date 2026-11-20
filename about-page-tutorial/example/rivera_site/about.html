@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Alex Rivera</title>
+    <link rel="stylesheet" href="css/style.css">
+    <!-- Phosphor Icons: one line loads the whole free icon set -->
+    <script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+</head>
+<body>
+    <!-- The top of the page: my name, like a logo -->
+    <header>
+        <p class="logo">Alex Rivera</p>
+        <!-- A hamburger button that opens and closes the menu on phones -->
+        <button aria-label="Menu" aria-expanded="false">&#9776;</button>
+        <!-- The menu: links to the five pages of my site -->
+        <nav>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="gallery.html">Gallery</a></li>
+                <li><a href="media.html">Media</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <!-- HOOK: the first thing a visitor reads. Who I am, in one big line and two short ones. The words come first, so they are on the left -->
+        <section class="profile">
+            <div>
+                <p class="label"><i class="ph ph-user-circle" aria-hidden="true"></i>About me</p>
+                <h1>I am a student and a <span>future web designer</span>.</h1>
+                <p>Hello. My name is Alex Rivera. I am a student, and I am learning to make web pages.</p>
+                <p>
+                    <a class="button" href="#story">Read my story</a>
+                    <a class="button ghost" href="gallery.html">See my gallery</a>
+                </p>
+            </div>
+            <img src="images/me.jpg" alt="Alex Rivera smiling in front of a blue wall">
+        </section>
+        <!-- STORY: how I started making web pages. One column in the middle, so it is easy to read -->
+        <div class="story" id="story">
+            <p class="label"><i class="ph ph-book-open-text" aria-hidden="true"></i>My story</p>
+            <h2>How I Started</h2>
+            <p>I made my first web page in a class, and I was hooked.</p>
+            <p>Now I build one small site every month to practice.</p>
+        </div>
+        <!-- JOURNEY: three moments, oldest first. The order matters, so it is an ordered list -->
+        <section class="timeline">
+            <div>
+                <p class="label"><i class="ph ph-path" aria-hidden="true"></i>My journey</p>
+                <h2>One Step at a Time</h2>
+                <ol>
+                    <li><strong>First class</strong>I made my first web page.</li>
+                    <li><strong>Second class</strong>I learned to style pages with CSS.</li>
+                    <li><strong>Now</strong>I am building a site for a local bakery.</li>
+                </ol>
+            </div>
+            <img src="images/trail.jpg" alt="A dirt trail through green mountains on a sunny day">
+        </section>
+        <!-- SKILLS: four things I can do, as short tags. A list is faster to read than a sentence -->
+        <section class="skills">
+            <div>
+                <p class="label"><i class="ph ph-star-four" aria-hidden="true"></i>My skills</p>
+                <h2>What I Can Do</h2>
+                <ul>
+                    <li>HTML</li>
+                    <li>CSS</li>
+                    <li>Photography</li>
+                    <li>Teamwork</li>
+                </ul>
+            </div>
+            <img src="images/laptop.jpg" alt="An open laptop on a desk next to a notebook">
+        </section>
+        <!-- TRUST: what two people said about my work. I asked them both first. blockquote means someone else said it -->
+        <div class="trust">
+            <blockquote>
+                <p><i class="ph ph-quotes" aria-hidden="true"></i>Alex listens first, and then builds exactly what you asked for.</p>
+                <p class="by">Sam Lee, lab partner</p>
+            </blockquote>
+            <blockquote>
+                <p><i class="ph ph-quotes" aria-hidden="true"></i>Alex explains things so clearly that I finally understood my own web site.</p>
+                <p class="by">Dana Cho, classmate</p>
+            </blockquote>
+        </div>
+        <!-- ACTION: what I want the visitor to do next. It is last, because the eye stops at the end of the page -->
+        <div class="action">
+            <div>
+                <h2>Want to see what I have made?</h2>
+                <p>Pick one. Then tell me what you think.</p>
+            </div>
+            <p>
+                <a class="button" href="gallery.html">See my gallery</a>
+                <a class="button ghost" href="contact.html">Send me a message</a>
+            </p>
+        </div>
+    </main>
+    <!-- The bottom of the page: who made it, and a link back to the top -->
+    <footer>
+        <p>Made by Alex Rivera</p>
+        <a href="#top">Back to top</a>
+    </footer>
+    <script src="js/menu.js"></script>
+</body>
+</html>

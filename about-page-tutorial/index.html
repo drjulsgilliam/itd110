@@ -1,0 +1,289 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Make an About Page</title>
+<meta name="description" content="Make an About page from scratch in VS Code, one small step at a time.">
+
+<link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css">
+<link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/fill/style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.css">
+<link rel="stylesheet" href="studio/studio.css?v=mwpeprby">
+</head>
+<body>
+<a class="skip" href="#main">Skip to the lesson</a>
+
+<header class="topbar">
+  <a class="logo" href="#main" title="Make an About Page tutorial"><b>About Page</b><span class="course">From Scratch</span><span class="tag">One small step at a time</span></a>
+  <div class="topright">
+    <span class="oslab hide-sm" aria-hidden="true">My computer</span><div class="seg small" role="group" aria-label="My computer: changes the computer steps to match yours" title="My computer: changes the computer steps to match yours">
+      <button type="button" data-os="mac">Mac</button>
+      <button type="button" data-os="win">Windows</button>
+    </div>
+    <button type="button" class="pill sm fontchip" id="fontChip" hidden><i class="ph ph-text-aa" aria-hidden="true"></i> <span id="fontChipName"></span> &#183; Back to standard font</button>
+    <button type="button" class="pill sm askpatch" id="askPatch"><img src="images/patch-avatar.png" alt="" width="24" height="24"> Ask Patch</button>
+    <button type="button" class="ghost" id="displayBtn" aria-haspopup="dialog" aria-label="Display and audio"><i class="ph ph-person-simple-circle" aria-hidden="true"></i> <span class="hide-sm">Display &amp; audio</span></button>
+    <button type="button" class="pill sm show-sm" id="journeyBtn" aria-expanded="false" aria-controls="journey"><i class="ph ph-list" aria-hidden="true"></i> All steps</button>
+  </div>
+</header>
+
+<div class="layout">
+  <nav class="journey" id="journey" aria-label="Your journey">
+    <p class="jlabel">Your journey</p>
+    <div class="jfilter" id="jFilter"></div>
+    <ol id="journeyList"></ol>
+    <div class="levelbox">
+      <p class="muted small"><i class="ph ph-video" aria-hidden="true"></i> Need to see it step by step? Each step has pictures, and <b>Watch &amp; try</b> plays them for you.</p>
+    </div>
+  </nav>
+
+  <main id="main" tabindex="-1">
+    <div class="crumbs"><span id="crumbPage"><i class="ph ph-house" aria-hidden="true"></i> Home page</span> <span aria-hidden="true">/</span> <b id="crumbSec">Your words</b><span class="spacer"></span><span id="crumbCount">Step 2 of 6</span></div>
+    <div class="partpick"><label for="partPick"><i class="ph ph-signpost" aria-hidden="true"></i> Go to</label><select id="partPick"></select><span class="partnote">Choose what you want to learn. You can open any part at any time.</span></div>
+
+    <div class="taskhead">
+      <div>
+        <h1 id="taskTitle">Make your first edit.</h1>
+      </div>
+      <div class="listenwrap">
+        <button type="button" class="pill" id="listenBtn"><i class="ph ph-speaker-high" aria-hidden="true"></i> Listen</button>
+        <div class="listenbar" id="listenBar" hidden>
+          <span id="listenState" class="sr">Reading the instructions&#8230;</span>
+          <button type="button" class="pill sm" id="listenPause"><i class="ph ph-pause" aria-hidden="true"></i> Pause</button>
+          <button type="button" class="pill sm" id="listenStop"><i class="ph ph-stop" aria-hidden="true"></i> Stop</button>
+        </div>
+      </div>
+    </div>
+
+    <section class="panel introsec" id="introSec" aria-labelledby="introH">
+      <div class="sechead"><h2 class="todoh" id="introH"><i class="ph ph-compass" aria-hidden="true"></i> About this step</h2><button type="button" class="linkish" id="introToggle" aria-controls="introBody" aria-expanded="true">Minimize</button></div>
+      <div class="introgrid" id="introBody">
+        <div class="itile"><div class="ihead"><span class="iico" aria-hidden="true"><i class="ph ph-target"></i></span><b class="ilab">Goal</b></div><p class="sub" id="taskSub"></p></div>
+        <div class="itile" id="whyTile"><div class="ihead"><span class="iico why-ico" aria-hidden="true"><i class="ph ph-lightbulb"></i></span><b class="ilab">Why it matters</b></div><p class="why" id="taskWhy"></p></div>
+    <div class="itile modes" id="modeTile" role="group" aria-label="How you are working">
+      <div class="modesbody"><div class="ihead"><span class="iico mode-ico" aria-hidden="true"><i class="ph ph-browser" id="modeIco"></i></span><b class="ilab">How you work</b></div>
+      <div class="seg big" id="modeSeg">
+        <button type="button" data-mode="here" title="A stepping stone: edit on this page, with a live preview, hints and checks"><i class="ph ph-browser" aria-hidden="true"></i> Edit here</button>
+        <button type="button" data-mode="vscode" title="How real web pages are made: follow along while you edit in Visual Studio Code"><i class="ph ph-code" aria-hidden="true"></i> Use VS Code</button>
+      </div>
+      <p class="modehelp" id="modeHelp"></p>
+      <p class="modemini" id="modeMini" hidden></p>
+      </div>
+    </div>
+      </div>
+    </section>
+
+    <section class="panel steps" aria-labelledby="todoH">
+      <p class="optbar" id="optBar" hidden></p>
+      <div class="chooser" id="chooser" hidden></div>
+      <div class="todohead sechead" id="todoHead"><h2 class="todoh" id="todoH"><i class="ph ph-list-numbers" aria-hidden="true"></i> Your steps</h2><button type="button" class="linkish" id="stepsToggle" aria-controls="todo" aria-expanded="true">Minimize</button></div>
+      <ol class="todo" id="todo" aria-labelledby="todoH"></ol>
+      <div class="stepfigs" id="stepFigs" hidden></div>
+      <details class="learn" id="learnBox" hidden><summary><i class="ph ph-lightbulb" aria-hidden="true"></i> Want to know more?</summary><div id="learnText"></div></details>
+      <div class="moreline" id="moreLine" hidden></div>
+      <div class="quick" id="quickLine" hidden></div>
+      <div class="selfhere" id="selfHere" hidden></div>
+    </section>
+
+    <section class="panel watchsec" id="watchSec" aria-labelledby="watchH">
+      <div class="sechead"><h2 class="todoh" id="watchH"><i class="ph ph-hand-pointing" aria-hidden="true"></i> Choose how you learn</h2><button type="button" class="linkish" id="watchToggle" aria-controls="watchBody" aria-expanded="true">Minimize</button></div>
+      <div class="ways" id="waysRow" role="group" aria-labelledby="waysH">
+        <p class="waysh" id="waysH">Everyone learns differently. Pick what helps you. You can use more than one.</p>
+        <div class="waysbtns">
+          <button type="button" class="wayb" id="waySteps" aria-pressed="false"><i class="ph ph-images" aria-hidden="true"></i><span><b id="wayStepsT">See a picture for every step</b><small>Pictures appear under each step above</small></span></button>
+          <button type="button" class="wayb" id="wayWatch"><i class="ph ph-play-circle" aria-hidden="true"></i><span><b id="wayWatchT">Watch it step by step</b><small id="wayWatchS">Each step plays with its picture and words</small></span></button>
+          <button type="button" class="wayb" id="wayVideo"><i class="ph ph-video" aria-hidden="true"></i><span><b>Watch Dr. G&#8217;s video</b><small>A real recording, start to finish</small></span></button>
+          <button type="button" class="wayb" id="wayListen"><i class="ph ph-speaker-high" aria-hidden="true"></i><span><b>Listen</b><small>Hear the steps read out loud</small></span></button>
+        </div>
+      </div>
+      <div class="watchcard" id="watchBody">
+        <button type="button" class="thumb" id="watchBtn" aria-label="Watch: see this edit done">
+          <span class="play"><i class="ph-fill ph-play" aria-hidden="true"></i></span>
+        </button>
+        <div>
+          <p class="wtitle">See this step done</p>
+          <p class="muted" id="watchMeta">Click the play icon to watch how to change the code. Captions are on.</p>
+        </div>
+      </div>
+      <div class="watchpanel" id="watchPanel" hidden></div>
+    </section>
+
+    <section class="mediabar panel" id="mediaBar" hidden aria-label="Add your files"></section>
+
+
+    <!-- Edit here: code + preview -->
+    <div class="viewbar" id="viewBar">
+      <nav class="pagebar" aria-label="Open a page of your portfolio">
+        <span class="muted small">Page</span>
+        <div class="seg small" id="pageSeg">
+          <button type="button" data-page="index.html"><i class="ph ph-house" aria-hidden="true"></i> Home</button>
+          <button type="button" data-page="about.html">About</button>
+          <button type="button" data-page="projects.html">Projects</button>
+          <button type="button" data-page="multimedia.html">Multimedia</button>
+          <button type="button" data-page="contact.html">Contact</button>
+        </div>
+      </nav>
+      <span class="spacer"></span>
+      <span class="muted small" id="viewLab">Show</span>
+      <div class="seg small" role="group" aria-labelledby="viewLab">
+        <button type="button" data-view="both"><i class="ph ph-columns" aria-hidden="true"></i> Both</button>
+        <button type="button" data-view="code"><i class="ph ph-code" aria-hidden="true"></i> Code only</button>
+        <button type="button" data-view="prev"><i class="ph ph-eye" aria-hidden="true"></i> Preview only</button>
+      </div>
+    </div>
+    <section class="work" id="workHere" aria-label="Your code and preview">
+      <div class="tabs-sm" role="tablist" aria-label="Code or preview">
+        <button type="button" role="tab" id="tabCode" aria-selected="true" aria-controls="codePanel">Code</button>
+        <button type="button" role="tab" id="tabPrev" aria-selected="false" aria-controls="prevPanel">Preview</button>
+      </div>
+      <div class="panel code" id="codePanel" role="tabpanel" aria-labelledby="tabCode">
+        <div class="phead">
+          <h2>Your code</h2>
+          <span class="spacer"></span>
+          <button type="button" class="pill sm" id="findBtn"><i class="ph ph-magnifying-glass" aria-hidden="true"></i> Find it for me</button>
+          <button type="button" class="pill sm" id="undoBtn"><i class="ph ph-arrow-counter-clockwise" aria-hidden="true"></i> Undo</button>
+          <button type="button" class="pill sm" id="resetBtn"><i class="ph ph-arrows-counter-clockwise" aria-hidden="true"></i> Reset step</button>
+        </div>
+        <div class="filetabs" id="fileTabs" role="tablist" aria-label="Files"></div>
+        <div class="editor" id="editor"></div>
+        <p class="muted small">Edit here, then run your preview.</p>
+      </div>
+      <div class="panel prev" id="prevPanel" role="tabpanel" aria-labelledby="tabPrev">
+        <div class="phead">
+          <h2>Your preview</h2>
+          <span class="spacer"></span>
+          <button type="button" class="primary sm" id="runBtn">Run preview <i class="ph-fill ph-play" aria-hidden="true"></i></button>
+        </div>
+        <div class="seg small" role="group" aria-label="Preview size">
+          <button type="button" data-dev="desk" aria-pressed="true"><i class="ph ph-laptop" aria-hidden="true"></i> Desktop</button>
+          <button type="button" data-dev="tablet" aria-pressed="false"><i class="ph ph-device-tablet" aria-hidden="true"></i> Tablet</button>
+          <button type="button" data-dev="phone" aria-pressed="false"><i class="ph ph-device-mobile" aria-hidden="true"></i> Phone</button>
+        </div>
+        <div class="frame" id="frameWrap"><iframe id="preview" title="Preview of your page"></iframe></div>
+        <div class="row"><p class="muted small" id="devNote" style="margin:0;flex:1"></p>
+        <button type="button" class="pill sm" id="fullBtn"><i class="ph ph-arrows-out" aria-hidden="true"></i> Open full size</button></div>
+      </div>
+    </section>
+
+    <!-- Use VS Code: where to edit, and an optional paste-to-check -->
+    <section class="panel beforepanel" id="beforePanel" hidden aria-labelledby="beforeH">
+      <div class="phead">
+        <h2 id="beforeH">Before you change it</h2>
+        <span class="muted small">This is the template, so you can see the spot. Your own page is in your browser with Live Server.</span>
+        <span class="spacer"></span>
+        <div class="seg small" id="beforeSeg" role="group" aria-label="Preview size">
+          <button type="button" data-devb="desk" aria-pressed="true"><i class="ph ph-laptop" aria-hidden="true"></i> Desktop</button>
+          <button type="button" data-devb="tablet" aria-pressed="false"><i class="ph ph-device-tablet" aria-hidden="true"></i> Tablet</button>
+          <button type="button" data-devb="phone" aria-pressed="false"><i class="ph ph-device-mobile" aria-hidden="true"></i> Phone</button>
+        </div>
+        <button type="button" class="linkish" id="beforeToggle" aria-controls="beforeBody" aria-expanded="true">Minimize</button>
+      </div>
+      <div id="beforeBody">
+      <div class="frame" id="beforeWrap"><iframe id="beforeFrame" title="The template page before you change it"></iframe></div>
+      <div class="row"><p class="muted small" id="beforeNote" style="margin:0;flex:1"></p>
+      <button type="button" class="pill sm" id="beforeFull"><i class="ph ph-arrows-out" aria-hidden="true"></i> Open full size</button></div>
+      </div>
+    </section>
+
+    <section class="work vscode" id="workVS" hidden aria-label="Check it yourself">
+      <div class="panel vs-ex example" id="vsExample"></div>
+      <div class="panel vs-where" hidden>
+        <h2>In VS Code</h2>
+        <dl class="where" id="vsWhere"></dl>
+      </div>
+      <div class="panel vs-paste">
+        <textarea id="pasteBox" hidden aria-hidden="true" tabindex="-1"></textarea>
+        <div class="selfcheck" id="selfCheck"></div>
+      </div>
+    </section>
+
+    <div class="bottomrow">
+      <div class="panel savebox" hidden>
+        <p class="saved" id="savedNote"><i class="ph-fill ph-check-circle" aria-hidden="true"></i> <b>Progress saved on this device</b></p>
+        <div class="row">
+          <button type="button" class="pill" id="checkBtn"><i class="ph ph-check" aria-hidden="true"></i> Check my edit</button>
+          <button type="button" class="primary" id="downloadBtn" hidden><i class="ph ph-download-simple" aria-hidden="true"></i> Download my files</button>
+        </div>
+        <label class="pill sm importbtn" hidden><i class="ph ph-upload-simple" aria-hidden="true"></i> Import my files <input type="file" id="importInput" class="sr" accept=".zip,.html,.css,image/*,audio/*,video/mp4" multiple aria-label="Import your capstone zip or files"></label>
+        <p class="muted small" id="saveHelp">Your progress and edits are kept in this browser. They are not on your computer until you press <b>Download my files</b>.</p>
+      </div>
+      <aside class="panel patch" id="patch" aria-labelledby="patchH">
+        <div class="patchtop">
+          <img src="images/patch-avatar.png" alt="" width="40" height="40">
+          <h2 id="patchH">Patch &#183; Quick feedback</h2>
+          <span class="spacer"></span>
+          <button type="button" class="iconbtn" id="patchListen" aria-label="Listen to Patch&#8217;s feedback"><i class="ph ph-speaker-high" aria-hidden="true"></i></button>
+        </div>
+        <p class="chromenote" id="chromeNote" hidden></p>
+        <div id="patchMsg" class="patchmsg" role="status" aria-live="polite"><p>Make your edit, then press <b>Check my edit</b>. Stuck? I&#8217;ll give you one hint at a time.</p></div>
+        <div class="row wrap">
+          <button type="button" class="pill sm" id="stuckBtn">I&#8217;m stuck</button>
+          <button type="button" class="pill sm" id="hintBtn">Another hint</button>
+          <button type="button" class="pill sm" id="showBtn">Show me</button>
+          <button type="button" class="pill sm" id="otherWayBtn" hidden>Say it another way</button>
+        </div>
+        <div class="rate" id="rateRow" hidden>
+          <span class="muted small">Was this helpful?</span>
+          <button type="button" class="iconbtn" data-rate="yes" aria-label="Helpful"><i class="ph ph-thumbs-up" aria-hidden="true"></i></button>
+          <button type="button" class="iconbtn" data-rate="no" aria-label="Not helpful"><i class="ph ph-thumbs-down" aria-hidden="true"></i></button>
+        </div>
+        <p class="muted small" id="patchSource">Hints come from this page, in this browser. Nothing is sent anywhere.</p>
+      </aside>
+    </div>
+
+    <section class="panel lockcard" id="lockCard" hidden aria-live="polite"></section>
+
+    <div class="nextrow">
+      <button type="button" class="ghost" id="prevBtn"><i class="ph ph-arrow-left" aria-hidden="true"></i> Back</button>
+      <button type="button" class="primary big" id="nextBtn">Next step <i class="ph ph-arrow-right" aria-hidden="true"></i></button>
+    </div>
+    <p class="footline" id="footLine"></p>
+  </main>
+</div>
+
+<dialog id="displayDlg" aria-labelledby="dispH">
+  <form method="dialog">
+    <h2 id="dispH">Display &amp; audio</h2>
+    <fieldset><legend>Text size</legend>
+      <div class="seg small" role="group"><button type="button" data-size="1">A</button><button type="button" data-size="1.15">A+</button><button type="button" data-size="1.3">A++</button></div></fieldset>
+    <fieldset><legend>Colors</legend>
+      <div class="seg small" role="group"><button type="button" data-theme="light">Light</button><button type="button" data-theme="dark">Dark</button></div></fieldset>
+    <fieldset><legend>Font</legend>
+      <div class="seg small" role="group"><button type="button" data-font="std">Standard</button><button type="button" data-font="easy" style="font-family:'Atkinson Hyperlegible',sans-serif">Easy to read</button><button type="button" data-font="dys" style="font-family:'OpenDyslexic',sans-serif">OpenDyslexic</button></div>
+      <p class="small muted" style="margin:.4rem 0 0">Changes the tutorial&#8217;s text.</p></fieldset>
+    <fieldset><legend>Watch &amp; try</legend>
+      <label class="check"><input type="checkbox" id="watchBox"> Open the Watch &amp; try section on each step</label></fieldset>
+    <fieldset><legend>Motion</legend>
+      <label class="check"><input type="checkbox" id="calmBox"> Reduce motion (no typing animations)</label></fieldset>
+    <fieldset><legend>Read aloud</legend>
+      <label for="rateSel">Speed</label>
+      <select id="rateSel"><option value="0.8">Slower</option><option value="1" selected>Normal</option><option value="1.2">Faster</option></select></fieldset>
+    <fieldset><legend>Patch&#8217;s helper model</legend>
+      <p class="small" id="aiStatus" style="margin:0">Checking&#8230;</p></fieldset>
+    <div class="row end"><button class="primary" value="close">Done</button></div>
+  </form>
+</dialog>
+
+<dialog id="videoDlg" aria-labelledby="videoH" class="videodlg">
+  <div class="phead"><h2 id="videoH">Watch the video</h2><span class="spacer"></span><button type="button" class="pill sm" id="videoClose"><i class="ph ph-x" aria-hidden="true"></i> Close</button></div>
+  <p class="muted small" style="margin:.2rem 0 .6rem">Turn on captions with the <b>CC</b> button. Pause any time, then do the step yourself.</p>
+  <div class="videobox"><iframe id="videoFrame" title="Video" allowfullscreen allow="autoplay *; fullscreen *; encrypted-media *"></iframe></div>
+</dialog>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/xml/xml.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/javascript/javascript.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/css/css.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/htmlmixed/htmlmixed.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/search/searchcursor.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script>window.LW_ROOT = '';</script>
+<script src="studio/template-data.js?v=mwpeprby"></script>
+<script src="studio/tasks.js?v=mwpeprby"></script>
+<script src="studio/patch.js?v=mwpeprby"></script>
+<script src="studio/app.js?v=mwpeprby"></script>
+<script>if(!window.TASKS){document.getElementById("main").innerHTML='<section class="panel" style="padding:1.2rem"><h1>The tutorial could not load.</h1><p>This page needs the <b>studio</b> and <b>images</b> folders sitting next to it. Keep the whole <b>about-page-tutorial</b> folder together, then open the page again.</p></section>';}</script>
+</body>
+</html>

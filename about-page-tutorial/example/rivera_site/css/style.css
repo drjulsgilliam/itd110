@@ -1,0 +1,294 @@
+/* The whole page: font, text size and space between lines */
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    font-size: 18px;
+    line-height: 1.6;
+    /* Colors: light words on a dark page, like a night sky */
+    color: #eef1ff;
+    background-color: #0b1026;
+}
+
+/* Headings: an old-style font, so they stand out from the other words */
+h1, h2 {
+    font-family: Georgia, serif;
+}
+
+h1 {
+    font-size: 40px;
+    line-height: 1.1;
+    margin: 8px 0;
+}
+
+/* The menu: no bullets, big links on the right */
+nav ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+nav a {
+    display: block;
+    padding: 12px;
+    text-align: right;
+    white-space: nowrap;
+    color: #ffffff;
+}
+
+header {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    color: #ffffff;
+    background-color: #05081a;
+    padding: 16px;
+    position: sticky;
+    top: 0;
+}
+
+/* The main part: not too wide, in the middle, with space around it */
+main {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 16px;
+}
+
+footer {
+    padding: 16px;
+    background-color: #10163a;
+    text-align: center;
+}
+
+/* Links: gold, so they show on the dark page */
+a {
+    color: #f5c84c;
+}
+
+h1 span {
+    color: #f5c84c;
+}
+
+/* The hamburger button, and the menu hidden until it is open */
+button {
+    padding: 12px 16px;
+    font-size: 24px;
+    color: #05081a;
+    background-color: #f5c84c;
+    border: 0;
+    border-radius: 6px;
+}
+
+nav {
+    display: none;
+    width: 100%;
+}
+
+nav.open {
+    display: block;
+}
+
+.logo {
+    flex: 1;
+    margin: 0;
+    font-family: Georgia, serif;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+/* Pictures: fit the screen, round corners, a shadow */
+img {
+    display: block;
+    width: 100%;
+    max-width: 480px;
+    height: auto;
+    border-radius: 6px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+}
+
+section {
+    margin-bottom: 96px;
+}
+
+.label {
+    margin: 0;
+    font-size: 15px;
+    font-weight: bold;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #f5c84c;
+}
+
+h2 {
+    margin-top: 8px;
+}
+
+/* BUTTONS: a filled gold one for the main choice, and an outlined one for the second choice */
+.button {
+    display: inline-block;
+    margin: 0 8px 8px 0;
+    padding: 12px 16px;
+    border: 2px solid #f5c84c;
+    border-radius: 8px;
+    color: #05081a;
+    background-color: #f5c84c;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.ghost {
+    color: #f5c84c;
+    background-color: transparent;
+}
+
+/* STORY: a narrow column, because short lines are easier to read */
+.story {
+    max-width: 600px;
+    margin: 0 auto 96px;
+}
+
+/* JOURNEY: a line down the left side, so the moments read as one path */
+.timeline ol {
+    margin: 0;
+    padding-left: 24px;
+    border-left: 4px solid #f5c84c;
+    list-style: disc;
+}
+
+.timeline li {
+    margin-bottom: 16px;
+}
+
+.timeline li::marker {
+    color: #f5c84c;
+}
+
+.timeline strong {
+    display: block;
+    font-family: Georgia, serif;
+    font-size: 20px;
+}
+
+/* SKILLS: a row of round tags that can be read in one look */
+.skills ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 0;
+    list-style: none;
+}
+
+.skills li {
+    padding: 4px 14px;
+    border: 2px solid #f5c84c;
+    border-radius: 999px;
+    font-weight: bold;
+}
+
+/* TRUST: two quotes side by side, in large letters and their own font, so they look different from my own words */
+.trust {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 32px;
+    margin-bottom: 96px;
+}
+
+blockquote {
+    flex: 1 1 260px;
+    margin: 0;
+    font-family: Georgia, serif;
+    font-size: 24px;
+    line-height: 1.3;
+}
+
+.by {
+    font-family: Arial, sans-serif;
+    font-size: 16px;
+    font-weight: bold;
+    color: #aab3d6;
+}
+
+/* ACTION: the question on the left and the buttons on the right, where the eye stops */
+.action {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 96px;
+    padding: 24px;
+    border-radius: 6px;
+    color: #05081a;
+    background-color: #f5c84c;
+}
+
+.action .button {
+    color: #f5c84c;
+    background-color: #05081a;
+    border-color: #05081a;
+}
+
+.action .ghost {
+    color: #05081a;
+    background-color: transparent;
+}
+
+/* ICONS: a little space between an icon and the words after it */
+.label i {
+    margin-right: 6px;
+}
+
+.trust i {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 40px;
+    color: #f5c84c;
+}
+
+/* Wide screens only: everything inside these braces */
+@media (min-width: 800px) {
+    nav ul {
+        display: flex;
+        gap: 16px;
+    }
+
+    /* The bottom of the Z: footer parts in the two corners */
+    footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    /* Wide screens: no button, links always showing */
+    button {
+        display: none;
+    }
+
+    nav {
+        display: block;
+        width: auto;
+    }
+
+    header {
+        flex-wrap: nowrap;
+    }
+
+    /* The zigzag: picture next to words, sides switch from row to row */
+    section {
+        display: flex;
+        align-items: center;
+        gap: 48px;
+    }
+
+    section:nth-of-type(even) {
+        flex-direction: row-reverse;
+    }
+
+    section div {
+        flex: 1;
+    }
+
+    section img {
+        width: 45%;
+    }
+}
